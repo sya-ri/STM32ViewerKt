@@ -1,9 +1,10 @@
 package me.syari.stm32.viewer.config
 
 import java.io.File
+import java.util.*
 
-open class PropertiesFile(private val file: File) {
-    private val properties = java.util.Properties()
+open class ConfigFile(private val file: File) {
+    private val properties = Properties()
 
     fun key(name: String) = Key(this, name)
 
@@ -28,14 +29,14 @@ open class PropertiesFile(private val file: File) {
         properties.store(file.outputStream(), "STM32ViewerKt")
     }
 
-    fun saveFile(run: PropertiesFile.() -> Unit) {
+    fun saveFile(run: ConfigFile.() -> Unit) {
         run(this)
         saveFile()
     }
 
-    class Key(private val propertiesFile: PropertiesFile, val name: String) {
-        fun get() = propertiesFile.get(this)
+    class Key(private val configFile: ConfigFile, val name: String) {
+        fun get() = configFile.get(this)
 
-        fun put(value: String?) = propertiesFile.put(this, value)
+        fun put(value: String?) = configFile.put(this, value)
     }
 }

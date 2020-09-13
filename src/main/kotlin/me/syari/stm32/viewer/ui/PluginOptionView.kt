@@ -6,7 +6,7 @@ import javafx.scene.Parent
 import javafx.scene.control.TextField
 import me.syari.stm32.viewer.Plugin
 import me.syari.stm32.viewer.Plugins
-import me.syari.stm32.viewer.config.Properties
+import me.syari.stm32.viewer.config.Config
 import tornadofx.View
 import tornadofx.chooseFile
 import java.io.File
@@ -20,11 +20,10 @@ class PluginOptionView : View("プラグインオプション") {
     @FXML private lateinit var textViewGnuArmEmbedded: TextField
 
     init {
-        Properties.load() // TODO 起動時に読みこむように修正
-        textViewCubeIDE.text = Properties.Plugin.CubeIDE.get() ?: ""
-        textViewStLinkGdbServer.text = Properties.Plugin.STLinkGDBServer.get() ?: ""
-        textViewCubeProgrammer.text = Properties.Plugin.CubeProgrammer.get() ?: ""
-        textViewGnuArmEmbedded.text = Properties.Plugin.GnuArmEmbedded.get() ?: ""
+        textViewCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""
+        textViewStLinkGdbServer.text = Config.Plugin.STLinkGDBServer.get() ?: ""
+        textViewCubeProgrammer.text = Config.Plugin.CubeProgrammer.get() ?: ""
+        textViewGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
     }
 
     fun findCubeIDE(e: ActionEvent) {
@@ -41,11 +40,11 @@ class PluginOptionView : View("プラグインオプション") {
     }
 
     fun save(e: ActionEvent) {
-        Properties.saveFile {
-            Properties.Plugin.CubeIDE.put(textViewCubeIDE.text)
-            Properties.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
-            Properties.Plugin.CubeProgrammer.put(textViewCubeProgrammer.text)
-            Properties.Plugin.GnuArmEmbedded.put(textViewGnuArmEmbedded.text)
+        Config.saveFile {
+            Config.Plugin.CubeIDE.put(textViewCubeIDE.text)
+            Config.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
+            Config.Plugin.CubeProgrammer.put(textViewCubeProgrammer.text)
+            Config.Plugin.GnuArmEmbedded.put(textViewGnuArmEmbedded.text)
         }
     }
 }
