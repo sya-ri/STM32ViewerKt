@@ -1,7 +1,9 @@
 package me.syari.stm32.viewer
 
 fun main(){
-    val plugins = Plugins.find("/Applications/STM32CubeIDE.app/Contents/Eclipse/plugins")
+    print("PluginsFolderPath: ")
+    val pluginsFolderPath = readLine() ?: return println("Not Enter: Plugins Folder Path")
+    val plugins = Plugins.find(pluginsFolderPath)
         ?: return println("Not Found: Plugins Folder")
     plugins.forEach {
         println("${it.key} ${it.value}")
@@ -15,6 +17,10 @@ fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
     ProcessBuilder().apply {
         directory(stLinkGdbServer.toolsBin)
         redirectOutput(ProcessBuilder.Redirect.INHERIT)
-        command("./ST-LINK_gdbserver", "-d", "-v", "-cp", "'${cubeProgrammer.toolsBin?.absolutePath}'")
+        command(if (PlatformUtil.isWindows) {
+            listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
+        } else {
+            listOf("sh", "-c", "./ST-LINK_gdbserver")
+        } + listOf("-d", "-v", "-cp", "'${cubeProgrammer.toolsBin?.absolutePath}'"))
     }.start()
 }
