@@ -2,9 +2,9 @@ package me.syari.stm32.viewer
 
 import java.io.File
 
-data class AccessiblePlugin (
+data class AccessiblePlugin(
     val plugin: Plugin,
-    val folder: File
+    val folder: File,
 ) {
     val toolsBin: File?
 
@@ -19,7 +19,7 @@ data class AccessiblePlugin (
 }
 
 enum class Plugin(
-    val folder_name: String
+    val folder_name: String,
 ) {
     CubeProgrammer("com.st.stm32cube.ide.mcu.externaltools.cubeprogrammer"),
     StLinkGdbServer("com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server"),
@@ -36,12 +36,15 @@ object Plugins {
     private const val MAX_DEPTH = 3
 
     fun findPluginsFolder(cube_ide_file: File): File? {
-        fun findPluginsFolderRecursive(folder: File, depth: Int): File? {
+        fun findPluginsFolderRecursive(
+            folder: File,
+            depth: Int,
+        ): File? {
             folder.listFiles()?.forEach {
-                if(it.isDirectory) {
-                    if(it.name == "plugins") {
+                if (it.isDirectory) {
+                    if (it.name == "plugins") {
                         return it
-                    } else if(depth != MAX_DEPTH){
+                    } else if (depth != MAX_DEPTH) {
                         findPluginsFolderRecursive(it, depth + 1)?.let {
                             return it
                         }
@@ -51,7 +54,7 @@ object Plugins {
             return null
         }
 
-        val firstFindDirectory = if(cube_ide_file.isDirectory) {
+        val firstFindDirectory = if (cube_ide_file.isDirectory) {
             cube_ide_file
         } else {
             cube_ide_file.parentFile

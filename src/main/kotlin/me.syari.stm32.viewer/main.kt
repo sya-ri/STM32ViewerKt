@@ -1,11 +1,11 @@
 package me.syari.stm32.viewer
 
-fun main(){
+fun main() {
     print("CubeIDEPath: ")
     val cubeIDEPath = readLine() ?: return println("Not Enter: CubeIDE Path")
     val pluginsFolder = Plugins.findPluginsFolder(cubeIDEPath) ?: return println("Not Found: Plugins Folder")
     val plugins = Plugins.findPlugins(pluginsFolder)
-        ?: return println("Not Found: Plugins Folder")
+            ?: return println("Not Found: Plugins Folder")
     plugins.forEach {
         println("${it.key} ${it.value}")
     }
