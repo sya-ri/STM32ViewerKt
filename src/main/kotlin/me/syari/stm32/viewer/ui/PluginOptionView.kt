@@ -1,6 +1,5 @@
 package me.syari.stm32.viewer.ui
 
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.TextField
@@ -26,7 +25,7 @@ class PluginOptionView : View("プラグインオプション") {
         textViewGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
     }
 
-    fun findCubeIDE(e: ActionEvent) {
+    fun findCubeIDE() {
         val initialDirectory = File(textViewCubeIDE.text).parentFile
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
@@ -39,7 +38,11 @@ class PluginOptionView : View("プラグインオプション") {
         }
     }
 
-    fun save(e: ActionEvent) {
+    fun clickClose() {
+        close()
+    }
+
+    fun clickSave() {
         Config.saveFile {
             Config.Plugin.CubeIDE.put(textViewCubeIDE.text)
             Config.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
