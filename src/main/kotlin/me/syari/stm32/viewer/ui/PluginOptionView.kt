@@ -11,8 +11,8 @@ import tornadofx.View
 import tornadofx.chooseFile
 import java.io.File
 
-class OptionView : View("My View") {
-    override val root: Parent by fxml("/fxml/OptionView.fxml")
+class PluginOptionView : View("プラグインオプション") {
+    override val root: Parent by fxml("/fxml/PluginOptionView.fxml")
 
     @FXML private lateinit var textViewCubeIDE: TextField
     @FXML private lateinit var textViewStLinkGdbServer: TextField
