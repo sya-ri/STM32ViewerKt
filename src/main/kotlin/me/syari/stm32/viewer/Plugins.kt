@@ -4,22 +4,6 @@ import me.syari.stm32.viewer.util.PlatformUtil
 import me.syari.stm32.viewer.util.child
 import java.io.File
 
-data class AccessiblePlugin(
-    val plugin: Plugin,
-    val folder: File,
-) {
-    val toolsBin: File?
-
-    init {
-        val toolsBin = File(File(folder, "tools"), "bin")
-        this.toolsBin = if (toolsBin.exists() && toolsBin.isDirectory) {
-            toolsBin
-        } else {
-            null
-        }
-    }
-}
-
 enum class Plugin(
     val folder_name: String,
 ) {
@@ -64,10 +48,6 @@ object Plugins {
         return findPluginsFolderRecursive(firstFindDirectory, 0)
     }
 
-    fun findPluginsFolder(cube_ide_path: String): File? {
-        return findPluginsFolder(File(cube_ide_path))
-    }
-
     fun findPlugins(plugins_folder: File?): Map<Plugin, String>? {
         if (plugins_folder == null || !plugins_folder.exists() || !plugins_folder.isDirectory) return null
         return mutableMapOf<Plugin, String>().apply {
@@ -81,24 +61,25 @@ object Plugins {
     }
 }
 
-fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
-    val stLinkGdbServer = plugins[Plugin.StLinkGdbServer] ?: return println("Not Found: ST-Link GDB Server")
-    val cubeProgrammer = plugins[Plugin.CubeProgrammer] ?: return println("Not Found: CubeProgrammer")
+fun launchStLinkGdbServer(
+    stLinkGdbServerPath: String,
+    cubeProgrammerPath: String,
+) {
     ProcessBuilder().apply {
-        directory(stLinkGdbServer.toolsBin)
+        directory(File(stLinkGdbServerPath))
         redirectOutput(ProcessBuilder.Redirect.INHERIT)
         command(if (PlatformUtil.isWindows) {
             listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
         } else {
             listOf("./ST-LINK_gdbserver")
-        } + listOf("-d", "-v", "-cp", "'${cubeProgrammer.toolsBin?.absolutePath}'"))
+        } + listOf("-d", "-v", "-cp", "'$cubeProgrammerPath'"))
     }.start()
 }
 
-fun launchArmNoneEabiGdb(plugins: Map<Plugin, AccessiblePlugin>) {
-    val gnuArmEmbedded = plugins[Plugin.GnuArmEmbedded] ?: return println("Not Found: GnuArmEmbedded")
+fun launchArmNoneEabiGdb(gnuArmEmbeddedPath: String) {
     ProcessBuilder().apply {
-        directory(gnuArmEmbedded.toolsBin)
+        directory(File(gnuArmEmbeddedPath))
+        redirectInput(ProcessBuilder.Redirect.INHERIT)
         redirectOutput(ProcessBuilder.Redirect.INHERIT)
         command(if (PlatformUtil.isWindows) {
             listOf("cmd", "/c", "arm-none-eabi-gdb.exe")

@@ -59,17 +59,16 @@
       </TextField>
    </HBox>
    <HBox layoutX="10.0" layoutY="160.0">
-      <children>
-         <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="キャンセル">
-            <HBox.margin>
-               <Insets bottom="10.0" left="150.0" right="50.0" top="10.0"/>
-            </HBox.margin>
-         </Button>
-         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="保存">
-            <HBox.margin>
-               <Insets bottom="10.0" left="50.0" right="150.0" top="10.0"/>
-            </HBox.margin>
-         </Button>
-      </children>
+      <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="キャンセル">
+         <HBox.margin>
+            <Insets bottom="10.0" left="150.0" right="50.0" top="10.0"/>
+         </HBox.margin>
+      </Button>
+      <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="保存"
+              onAction="#save">
+         <HBox.margin>
+            <Insets bottom="10.0" left="50.0" right="150.0" top="10.0"/>
+         </HBox.margin>
+      </Button>
    </HBox>
 </VBox>

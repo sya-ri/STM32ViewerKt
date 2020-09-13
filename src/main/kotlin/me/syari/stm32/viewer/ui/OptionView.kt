@@ -6,6 +6,8 @@ import javafx.scene.Parent
 import javafx.scene.control.TextField
 import me.syari.stm32.viewer.Plugin
 import me.syari.stm32.viewer.Plugins
+import me.syari.stm32.viewer.launchArmNoneEabiGdb
+import me.syari.stm32.viewer.launchStLinkGdbServer
 import tornadofx.*
 import java.io.File
 
@@ -28,5 +30,10 @@ class OptionView: View("My View") {
             textViewCubeProgrammer.text = plugins?.get(Plugin.CubeProgrammer) ?: ""
             textViewArmNoneEabiGdb.text = plugins?.get(Plugin.GnuArmEmbedded) ?: ""
         }
+    }
+
+    fun save(e: ActionEvent) {
+        launchStLinkGdbServer(textViewStLinkGdbServer.text, textViewCubeProgrammer.text)
+        launchArmNoneEabiGdb(textViewArmNoneEabiGdb.text)
     }
 }
