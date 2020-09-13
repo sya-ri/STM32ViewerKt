@@ -3,24 +3,31 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0"
       prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <HBox>
-      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0" text="CubeIDE"/>
+      <Label maxHeight="1.7976931348623157E308" prefWidth="80.0" text="CubeIDE">
+         <HBox.margin>
+            <Insets left="20.0"/>
+         </HBox.margin>
+      </Label>
       <TextField fx:id="textViewCubeIDEPath" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
          </HBox.margin>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#findCubeIDE" prefHeight="30.0" prefWidth="50.0" text="探す">
+      <Button mnemonicParsing="false" onAction="#findCubeIDE" prefHeight="30.0" prefWidth="50.0" text="開く">
          <HBox.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
          </HBox.margin>
       </Button>
    </HBox>
    <HBox layoutX="10.0" layoutY="10.0">
-      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="170.0" text="ST-Link GDB Server"/>
+      <Label maxHeight="1.7976931348623157E308" prefWidth="150.0" text="ST-Link GDB Server">
+         <HBox.margin>
+            <Insets left="20.0"/>
+         </HBox.margin>
+      </Label>
       <TextField fx:id="textViewStLinkGdbServer" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
@@ -28,7 +35,11 @@
       </TextField>
    </HBox>
    <HBox layoutX="10.0" layoutY="60.0">
-      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="170.0" text="CubeProgrammer"/>
+      <Label maxHeight="1.7976931348623157E308" prefWidth="150.0" text="CubeProgrammer">
+         <HBox.margin>
+            <Insets left="20.0"/>
+         </HBox.margin>
+      </Label>
       <TextField fx:id="textViewCubeProgrammer" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
@@ -36,11 +47,29 @@
       </TextField>
    </HBox>
    <HBox layoutX="10.0" layoutY="110.0">
-      <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="170.0" text="arm-none-eabi-gdb"/>
+      <Label maxHeight="1.7976931348623157E308" prefWidth="150.0" text="arm-none-eabi-gdb">
+         <HBox.margin>
+            <Insets left="20.0"/>
+         </HBox.margin>
+      </Label>
       <TextField fx:id="textViewArmNoneEabiGdb" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
          </HBox.margin>
       </TextField>
+   </HBox>
+   <HBox layoutX="10.0" layoutY="160.0">
+      <children>
+         <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="キャンセル">
+            <HBox.margin>
+               <Insets bottom="10.0" left="150.0" right="50.0" top="10.0"/>
+            </HBox.margin>
+         </Button>
+         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="保存">
+            <HBox.margin>
+               <Insets bottom="10.0" left="50.0" right="150.0" top="10.0"/>
+            </HBox.margin>
+         </Button>
+      </children>
    </HBox>
 </VBox>
