@@ -6,6 +6,10 @@ fun main(){
     plugins.forEach {
         println("${it.key} ${it.value}")
     }
+    launchStLinkGdbServer(plugins)
+}
+
+fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
     val stLinkGdbServer = plugins[Plugin.StLinkGdbServer] ?: return println("Not Found: ST-Link GDB Server")
     val cubeProgrammer = plugins[Plugin.CubeProgrammer] ?: return println("Not Found: CubeProgrammer")
     ProcessBuilder().apply {
