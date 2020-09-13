@@ -7,4 +7,10 @@ fun main(){
     plugins.forEach {
         println("${it.key} ${it.value}")
     }
+    val stLinkGdbServer = plugins[Plugin.StLinkGdbServer] ?: return println("Not Found: ST-Link GDB Server")
+    ProcessBuilder().apply {
+        directory(stLinkGdbServer.toolsBin)
+        redirectOutput(ProcessBuilder.Redirect.INHERIT)
+        command("./ST-LINK_gdbserver")
+    }.start()
 }
