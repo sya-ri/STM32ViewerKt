@@ -68,11 +68,13 @@ fun launchStLinkGdbServer(
     ProcessBuilder().apply {
         directory(File(stLinkGdbServerPath))
         redirectOutput(ProcessBuilder.Redirect.INHERIT)
-        command(if (PlatformUtil.isWindows) {
-            listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
-        } else {
-            listOf("./ST-LINK_gdbserver")
-        } + listOf("-d", "-v", "-cp", "'$cubeProgrammerPath'"))
+        command(
+            if (PlatformUtil.isWindows) {
+                listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
+            } else {
+                listOf("./ST-LINK_gdbserver")
+            } + listOf("-d", "-v", "-cp", "'$cubeProgrammerPath'")
+        )
     }.start()
 }
 
@@ -81,10 +83,12 @@ fun launchArmNoneEabiGdb(gnuArmEmbeddedPath: String) {
         directory(File(gnuArmEmbeddedPath))
         redirectInput(ProcessBuilder.Redirect.INHERIT)
         redirectOutput(ProcessBuilder.Redirect.INHERIT)
-        command(if (PlatformUtil.isWindows) {
-            listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
-        } else {
-            listOf("./arm-none-eabi-gdb")
-        })
+        command(
+            if (PlatformUtil.isWindows) {
+                listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
+            } else {
+                listOf("./arm-none-eabi-gdb")
+            }
+        )
     }.start()
 }

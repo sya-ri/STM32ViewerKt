@@ -11,7 +11,7 @@
             <Insets left="20.0"/>
          </HBox.margin>
       </Label>
-      <TextField fx:id="textViewCubeIDEPath" prefHeight="30.0" prefWidth="400.0">
+      <TextField fx:id="textViewCubeIDE" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
          </HBox.margin>
@@ -47,12 +47,12 @@
       </TextField>
    </HBox>
    <HBox layoutX="10.0" layoutY="110.0">
-      <Label maxHeight="1.7976931348623157E308" prefWidth="150.0" text="arm-none-eabi-gdb">
+      <Label maxHeight="1.7976931348623157E308" prefWidth="150.0" text="GNU Arm Embedded">
          <HBox.margin>
             <Insets left="20.0"/>
          </HBox.margin>
       </Label>
-      <TextField fx:id="textViewArmNoneEabiGdb" prefHeight="30.0" prefWidth="400.0">
+      <TextField fx:id="textViewGnuArmEmbedded" prefHeight="30.0" prefWidth="400.0">
          <HBox.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
          </HBox.margin>
