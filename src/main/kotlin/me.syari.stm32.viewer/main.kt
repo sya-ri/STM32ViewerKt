@@ -20,7 +20,8 @@ fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
         command(if (PlatformUtil.isWindows) {
             listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
         } else {
-            listOf("sh", "-c", "./ST-LINK_gdbserver")
+            listOf("./ST-LINK_gdbserver")
         } + listOf("-d", "-v", "-cp", "'${cubeProgrammer.toolsBin?.absolutePath}'"))
+        println(command())
     }.start()
 }
