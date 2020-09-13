@@ -33,7 +33,38 @@ enum class Plugin(
 }
 
 object Plugins {
-    fun find(plugins_folder: File): Map<Plugin, AccessiblePlugin>? {
+    private const val MAX_DEPTH = 3
+
+    fun findPluginsFolder(cube_ide_file: File): File? {
+        fun findPluginsFolderRecursive(folder: File, depth: Int): File? {
+            folder.listFiles()?.forEach {
+                if(it.isDirectory) {
+                    println("$depth ${it.path}")
+                    if(it.name == "plugins") {
+                        return it
+                    } else if(depth != MAX_DEPTH){
+                        findPluginsFolderRecursive(it, depth + 1)?.let {
+                            return it
+                        }
+                    }
+                }
+            }
+            return null
+        }
+
+        val firstFindDirectory = if(cube_ide_file.isDirectory) {
+            cube_ide_file
+        } else {
+            cube_ide_file.parentFile
+        }
+        return findPluginsFolderRecursive(firstFindDirectory, 0)
+    }
+
+    fun findPluginsFolder(cube_ide_path: String): File? {
+        return findPluginsFolder(File(cube_ide_path))
+    }
+
+    fun findPlugins(plugins_folder: File): Map<Plugin, AccessiblePlugin>? {
         if (!plugins_folder.exists() || !plugins_folder.isDirectory) return null
         return mutableMapOf<Plugin, AccessiblePlugin>().apply {
             plugins_folder.listFiles()?.forEach { file ->
@@ -43,9 +74,5 @@ object Plugins {
                 }
             }
         }
-    }
-
-    fun find(plugins_folder_path: String): Map<Plugin, AccessiblePlugin>? {
-        return find(File(plugins_folder_path))
     }
 }
