@@ -1,6 +1,7 @@
 package me.syari.stm32.viewer
 
 import me.syari.stm32.viewer.util.PlatformUtil
+import me.syari.stm32.viewer.util.child
 import java.io.File
 
 data class AccessiblePlugin(
@@ -67,13 +68,13 @@ object Plugins {
         return findPluginsFolder(File(cube_ide_path))
     }
 
-    fun findPlugins(plugins_folder: File): Map<Plugin, AccessiblePlugin>? {
-        if (!plugins_folder.exists() || !plugins_folder.isDirectory) return null
-        return mutableMapOf<Plugin, AccessiblePlugin>().apply {
+    fun findPlugins(plugins_folder: File?): Map<Plugin, String>? {
+        if (plugins_folder == null || !plugins_folder.exists() || !plugins_folder.isDirectory) return null
+        return mutableMapOf<Plugin, String>().apply {
             plugins_folder.listFiles()?.forEach { file ->
                 if (!file.isDirectory) return@forEach
                 Plugin.match(file.name)?.let {
-                    put(it, AccessiblePlugin(it, file))
+                    put(it, file.child("tools", "bin").path)
                 }
             }
         }

@@ -22,19 +22,11 @@ class OptionView: View("My View") {
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
             textViewCubeIDEPath.text = it.path
-            Plugins.findPluginsFolder(it)?.let { pluginsFolder ->
-                Plugins.findPlugins(pluginsFolder)?.let { plugins ->
-                    plugins[Plugin.StLinkGdbServer]?.let { plugin ->
-                        textViewStLinkGdbServer.text = plugin.folder.path
-                    }
-                    plugins[Plugin.CubeProgrammer]?.let { plugin ->
-                        textViewCubeProgrammer.text = plugin.folder.path
-                    }
-                    plugins[Plugin.GnuArmEmbedded]?.let { plugin ->
-                        textViewArmNoneEabiGdb.text = plugin.folder.path
-                    }
-                }
-            }
+            val pluginsFolder = Plugins.findPluginsFolder(it)
+            val plugins = Plugins.findPlugins(pluginsFolder)
+            textViewStLinkGdbServer.text = plugins?.get(Plugin.StLinkGdbServer) ?: ""
+            textViewCubeProgrammer.text = plugins?.get(Plugin.CubeProgrammer) ?: ""
+            textViewArmNoneEabiGdb.text = plugins?.get(Plugin.GnuArmEmbedded) ?: ""
         }
     }
 }
