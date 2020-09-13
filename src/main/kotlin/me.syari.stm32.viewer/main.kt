@@ -9,6 +9,7 @@ fun main(){
         println("${it.key} ${it.value}")
     }
     launchStLinkGdbServer(plugins)
+    launchArmNoneEabiGdb(plugins)
 }
 
 fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
@@ -22,6 +23,18 @@ fun launchStLinkGdbServer(plugins: Map<Plugin, AccessiblePlugin>) {
         } else {
             listOf("./ST-LINK_gdbserver")
         } + listOf("-d", "-v", "-cp", "'${cubeProgrammer.toolsBin?.absolutePath}'"))
-        println(command())
+    }.start()
+}
+
+fun launchArmNoneEabiGdb(plugins: Map<Plugin, AccessiblePlugin>) {
+    val gnuArmEmbedded = plugins[Plugin.GnuArmEmbedded] ?: return println("Not Found: GnuArmEmbedded")
+    ProcessBuilder().apply {
+        directory(gnuArmEmbedded.toolsBin)
+        redirectOutput(ProcessBuilder.Redirect.INHERIT)
+        command(if (PlatformUtil.isWindows) {
+            listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
+        } else {
+            listOf("./arm-none-eabi-gdb")
+        })
     }.start()
 }
