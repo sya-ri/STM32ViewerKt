@@ -11,13 +11,13 @@ class OptionView: View("My View") {
     override val root: Parent by fxml("/fxml/OptionView.fxml")
 
     @FXML
-    private lateinit var CubeIDETextField: TextField
+    private lateinit var textViewCubeIDEPath: TextField
 
     fun findCubeIDE(e: ActionEvent) {
-        val initialDirectory = File(CubeIDETextField.text).parentFile
+        val initialDirectory = File(textViewCubeIDEPath.text).parentFile
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
-            CubeIDETextField.text = it.path
+            textViewCubeIDEPath.text = it.path
         }
     }
 }
