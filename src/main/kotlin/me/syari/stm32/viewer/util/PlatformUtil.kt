@@ -1,4 +1,4 @@
-package me.syari.stm32.viewer
+package me.syari.stm32.viewer.util
 
 object PlatformUtil {
     private val OS_NAME = System.getProperty("os.name").toLowerCase()
