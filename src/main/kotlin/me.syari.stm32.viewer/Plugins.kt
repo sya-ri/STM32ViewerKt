@@ -39,7 +39,6 @@ object Plugins {
         fun findPluginsFolderRecursive(folder: File, depth: Int): File? {
             folder.listFiles()?.forEach {
                 if(it.isDirectory) {
-                    println("$depth ${it.path}")
                     if(it.name == "plugins") {
                         return it
                     } else if(depth != MAX_DEPTH){
