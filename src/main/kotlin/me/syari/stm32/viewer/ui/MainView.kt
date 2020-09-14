@@ -16,7 +16,7 @@ class MainView : View("STM32ViewerKt") {
         chooseFile(null, arrayOf(FileChooser.ExtensionFilter("Executable File", "elf")))
     }
 
-    fun clickMenuOpenPluginConfig() {
+    fun clickMenuOpenPluginOption() {
         openInternalWindow(PluginOptionView::class)
     }
 

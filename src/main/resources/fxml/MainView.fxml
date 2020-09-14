@@ -7,8 +7,8 @@
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#clickMenuOpenElf" text="Open .elf"/>
-            <Menu mnemonicParsing="false" text="Config">
-                <MenuItem mnemonicParsing="false" onAction="#clickMenuOpenPluginConfig" text="Plugin"/>
+            <Menu mnemonicParsing="false" text="Option">
+                <MenuItem mnemonicParsing="false" onAction="#clickMenuOpenPluginOption" text="Plugin"/>
             </Menu>
         </Menu>
         <Menu mnemonicParsing="false" text="View">
