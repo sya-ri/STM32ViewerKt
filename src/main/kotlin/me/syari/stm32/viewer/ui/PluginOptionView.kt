@@ -49,5 +49,6 @@ class PluginOptionView : View("プラグインオプション") {
             Config.Plugin.CubeProgrammer.put(textViewCubeProgrammer.text)
             Config.Plugin.GnuArmEmbedded.put(textViewGnuArmEmbedded.text)
         }
+        close()
     }
 }
