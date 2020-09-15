@@ -2,8 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+      prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#clickMenuOpenElf" text="Open .elf"/>
@@ -11,8 +11,8 @@
                 <MenuItem mnemonicParsing="false" onAction="#clickMenuOpenPluginOption" text="Plugin"/>
             </Menu>
         </Menu>
-        <Menu mnemonicParsing="false" text="View">
-            <MenuItem fx:id="menuItemRun" mnemonicParsing="false" text="Run" onAction="#clickMenuRun"/>
+        <Menu mnemonicParsing="false" text="Debug">
+            <MenuItem fx:id="menuItemRun" mnemonicParsing="false" onAction="#clickMenuRun" text="Run"/>
         </Menu>
     </MenuBar>
 </VBox>
