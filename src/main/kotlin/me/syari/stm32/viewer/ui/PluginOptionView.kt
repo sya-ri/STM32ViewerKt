@@ -5,9 +5,9 @@ import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
-import me.syari.stm32.viewer.Plugins
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.debug.Plugin
+import me.syari.stm32.viewer.debug.Plugins
 import me.syari.stm32.viewer.util.finally
 import tornadofx.View
 import tornadofx.chooseFile
