@@ -1,6 +1,8 @@
 package me.syari.stm32.viewer.debug
 
 import javafx.concurrent.Task
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.PlatformUtil
 import me.syari.stm32.viewer.util.finally
@@ -17,7 +19,6 @@ object STLinkGDBServer {
         launchTask = runAsync {
             launchProcess = ProcessBuilder().apply {
                 directory(File(stLinkGdbServerPath))
-                redirectOutput(ProcessBuilder.Redirect.INHERIT)
                 command(
                     if (PlatformUtil.isWindows) {
                         listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
@@ -28,6 +29,11 @@ object STLinkGDBServer {
             }.start()
             launchProcess?.waitFor()
         } finally {
+            if (launchProcess?.isAlive == false) {
+                ExitErrorMessage.get(launchProcess?.exitValue())?.let { message ->
+                    Alert(Alert.AlertType.ERROR, message, ButtonType.OK).show()
+                }
+            }
             launchProcess?.let {
                 it.destroy()
                 launchProcess = null
@@ -43,6 +49,18 @@ object STLinkGDBServer {
     }
 
     fun cancel() {
-        launchTask?.cancel()
+        launchTask?.let {
+            it.cancel()
+            launchTask = null
+        }
+    }
+
+    object ExitErrorMessage {
+        private val list = mapOf(
+            1 to "デバイスに接続出来ませんでした",
+            2 to "デバイスが見つかりませんでした"
+        )
+
+        fun get(exitValue: Int?) = list[exitValue]
     }
 }
