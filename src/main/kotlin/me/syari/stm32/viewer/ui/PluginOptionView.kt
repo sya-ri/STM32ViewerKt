@@ -29,6 +29,7 @@ class PluginOptionView : View("プラグインオプション") {
         buttonFindCubeIDE.isDisable = false
     }
 
+    @Suppress("unused") // fxml
     fun clickFindCubeIDE() {
         val initialDirectory = File(textViewCubeIDE.text).parentFile
         val file = chooseFile(null, emptyArray(), initialDirectory)
@@ -48,12 +49,14 @@ class PluginOptionView : View("プラグインオプション") {
         }
     }
 
+    @Suppress("unused") // fxml
     fun clickClose() {
         findCubeIDETask.cancel()
         updateDisplayFromConfig()
         close()
     }
 
+    @Suppress("unused") // fxml
     fun clickSave() {
         findCubeIDETask.cancel()
         Config.saveFile {

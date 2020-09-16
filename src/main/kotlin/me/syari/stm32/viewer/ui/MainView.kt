@@ -15,16 +15,19 @@ class MainView : View("STM32ViewerKt") {
 
     @FXML lateinit var menuItemRun: MenuItem
 
+    @Suppress("unused") // fxml
     fun clickMenuOpenElf() {
         chooseFile(null, arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf")))
     }
 
+    @Suppress("unused") // fxml
     fun clickMenuOpenPluginOption() {
         openInternalWindow(PluginOptionView::class)
     }
 
     var isRunning = false
 
+    @Suppress("unused") // fxml
     fun clickMenuRun() {
         isRunning = isRunning.not()
         menuItemRun.text = if (isRunning) {
