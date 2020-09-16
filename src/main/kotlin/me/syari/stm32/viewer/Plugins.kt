@@ -5,11 +5,7 @@ import me.syari.stm32.viewer.util.PlatformUtil
 import me.syari.stm32.viewer.util.child
 import java.io.File
 
-
-
 object Plugins {
-    private const val MAX_DEPTH = 3
-
     fun findPluginsFolder(cube_ide_file: File): File? {
         fun findPluginsFolderRecursive(
             folder: File,
@@ -19,10 +15,9 @@ object Plugins {
                 if (it.isDirectory) {
                     if (it.name == "plugins") {
                         return it
-                    } else if (depth != MAX_DEPTH) {
-                        findPluginsFolderRecursive(it, depth + 1)?.let {
-                            return it
-                        }
+                    }
+                    findPluginsFolderRecursive(it, depth + 1)?.let {
+                        return it
                     }
                 }
             }

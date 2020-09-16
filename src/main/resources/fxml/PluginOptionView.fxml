@@ -16,7 +16,8 @@
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
          </HBox.margin>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#findCubeIDE" prefHeight="30.0" prefWidth="50.0" text="開く">
+      <Button fx:id="buttonFindCubeIDE" mnemonicParsing="false" onAction="#clickFindCubeIDE" prefHeight="30.0"
+              prefWidth="50.0" text="開く">
          <HBox.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
          </HBox.margin>
