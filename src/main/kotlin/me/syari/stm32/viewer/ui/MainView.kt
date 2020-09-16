@@ -4,6 +4,7 @@ import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.MenuItem
 import javafx.stage.FileChooser
+import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
 import me.syari.stm32.viewer.debug.STLinkGDBServer
 import tornadofx.View
 import tornadofx.chooseFile
@@ -30,9 +31,10 @@ class MainView : View("STM32ViewerKt") {
         isRunning = isRunning.not()
         menuItemRun.text = if (isRunning) {
             STLinkGDBServer.launch()
-            //launchArmNoneEabiGdb(Config.Plugin.GnuArmEmbedded.get()!!)
+            ArmNoneEabiGdb.launch()
             "Stop"
         } else {
+            ArmNoneEabiGdb.cancel()
             STLinkGDBServer.cancel()
             "Run"
         }

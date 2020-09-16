@@ -1,0 +1,50 @@
+package me.syari.stm32.viewer.debug
+
+import javafx.concurrent.Task
+import me.syari.stm32.viewer.config.Config
+import me.syari.stm32.viewer.util.PlatformUtil
+import me.syari.stm32.viewer.util.finally
+import tornadofx.runAsync
+import java.io.File
+
+object ArmNoneEabiGdb {
+    private var launchProcess: Process? = null
+    private var launchTask: Task<Int?>? = null
+
+    fun launch(): LaunchResult {
+        val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get() ?: return LaunchResult.GnuArmEmbeddedPathIsNull
+        launchTask = runAsync {
+            launchProcess = ProcessBuilder().apply {
+                directory(File(gnuArmEmbeddedPath))
+                redirectInput(ProcessBuilder.Redirect.INHERIT)
+                redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                command(
+                    if (PlatformUtil.isWindows) {
+                        listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
+                    } else {
+                        listOf("./arm-none-eabi-gdb")
+                    }
+                )
+            }.start()
+            launchProcess?.waitFor()
+        } finally {
+            launchProcess?.let {
+                it.destroy()
+                launchProcess = null
+            }
+        }
+        return LaunchResult.Success
+    }
+
+    enum class LaunchResult {
+        Success,
+        GnuArmEmbeddedPathIsNull
+    }
+
+    fun cancel() {
+        launchTask?.let {
+            it.cancel()
+            launchTask = null
+        }
+    }
+}
