@@ -28,7 +28,7 @@ object Plugin {
     }
 
     fun findPlugins(plugins_folder: File?): Map<Type, String>? {
-        if (plugins_folder == null || !plugins_folder.exists() || !plugins_folder.isDirectory) return null
+        if (plugins_folder == null || plugins_folder.exists().not() || plugins_folder.isDirectory.not()) return null
         return mutableMapOf<Type, String>().apply {
             plugins_folder.listFiles()?.forEach { file ->
                 if (file.isDirectory) {

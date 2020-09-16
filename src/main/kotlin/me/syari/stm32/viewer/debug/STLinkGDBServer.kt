@@ -18,13 +18,13 @@ object STLinkGDBServer {
         val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
         if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
         val stLinkGdbServerFile = File(stLinkGdbServerPath)
-        if (!stLinkGdbServerFile.exists()) return LaunchResult.STLinkGDBServerNotExits
+        if (stLinkGdbServerFile.exists().not()) return LaunchResult.STLinkGDBServerNotExits
         if (stLinkGdbServerFile.list()?.firstOrNull { it.startsWith("ST-LINK_gdbserver") } == null)
             return LaunchResult.STLinkGDBServerNotExits
         val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
         if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
         val cubeProgrammerFile = File(cubeProgrammerPath)
-        if (!cubeProgrammerFile.exists()) return LaunchResult.CubeProgrammerNotExits
+        if (cubeProgrammerFile.exists().not()) return LaunchResult.CubeProgrammerNotExits
         if (cubeProgrammerFile.list()?.firstOrNull { it.startsWith("STM32_Programmer_CLI") } == null)
             return LaunchResult.CubeProgrammerNotExits
         launchTask = runAsync {

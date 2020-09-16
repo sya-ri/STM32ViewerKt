@@ -15,7 +15,7 @@ object ArmNoneEabiGdb {
         val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get()
         if (gnuArmEmbeddedPath.isNullOrEmpty()) return LaunchResult.GnuArmEmbeddedPathIsNull
         val gnuArmEmbeddedFile = File(gnuArmEmbeddedPath)
-        if (!gnuArmEmbeddedFile.exists()) return LaunchResult.GnuArmEmbeddedNotExits
+        if (gnuArmEmbeddedFile.exists().not()) return LaunchResult.GnuArmEmbeddedNotExits
         if (gnuArmEmbeddedFile.list()?.firstOrNull { it.startsWith("arm-none-eabi-gdb") } == null)
             return LaunchResult.ArmNoneEabiGdbNotExits
         launchTask = runAsync {

@@ -30,7 +30,7 @@ class PluginOptionView : View("プラグインオプション") {
     @Suppress("unused") // fxml
     fun clickFindCubeIDE() {
         var initialDirectory = File(textViewCubeIDE.text).parentFile
-        if (!initialDirectory.exists()) initialDirectory = null
+        if (initialDirectory.exists().not()) initialDirectory = null
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
             textViewCubeIDE.text = it.path

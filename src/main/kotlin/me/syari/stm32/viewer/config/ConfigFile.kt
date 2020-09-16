@@ -23,7 +23,7 @@ open class ConfigFile(private val file: File) {
     }
 
     private fun saveFile() {
-        if (!file.exists()) {
+        if (file.exists().not()) {
             file.createNewFile()
         }
         properties.store(file.outputStream(), "STM32ViewerKt")
