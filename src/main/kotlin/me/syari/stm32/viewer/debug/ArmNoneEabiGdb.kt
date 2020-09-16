@@ -14,9 +14,13 @@ object ArmNoneEabiGdb {
     fun launch(): LaunchResult {
         val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get()
         if (gnuArmEmbeddedPath.isNullOrEmpty()) return LaunchResult.GnuArmEmbeddedPathIsNull
+        val gnuArmEmbeddedFile = File(gnuArmEmbeddedPath)
+        if (!gnuArmEmbeddedFile.exists()) return LaunchResult.GnuArmEmbeddedNotExits
+        if (gnuArmEmbeddedFile.list()?.firstOrNull { it.startsWith("arm-none-eabi-gdb") } == null)
+            return LaunchResult.ArmNoneEabiGdbNotExits
         launchTask = runAsync {
             launchProcess = ProcessBuilder().apply {
-                directory(File(gnuArmEmbeddedPath))
+                directory(gnuArmEmbeddedFile)
                 redirectInput(ProcessBuilder.Redirect.INHERIT)
                 redirectOutput(ProcessBuilder.Redirect.INHERIT)
                 command(
@@ -39,7 +43,9 @@ object ArmNoneEabiGdb {
 
     enum class LaunchResult {
         Success,
-        GnuArmEmbeddedPathIsNull
+        GnuArmEmbeddedPathIsNull,
+        GnuArmEmbeddedNotExits,
+        ArmNoneEabiGdbNotExits
     }
 
     fun cancel() {
