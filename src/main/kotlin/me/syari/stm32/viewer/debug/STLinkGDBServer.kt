@@ -15,8 +15,10 @@ object STLinkGDBServer {
     private var launchTask: Task<Int?>? = null
 
     fun launch(): LaunchResult {
-        val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get() ?: return LaunchResult.STLinkGDBServerPathIsNull
-        val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get() ?: return LaunchResult.CubeProgrammerPathIsNull
+        val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
+        if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
+        val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
+        if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
         launchTask = runAsync {
             launchProcess = ProcessBuilder().apply {
                 directory(File(stLinkGdbServerPath))

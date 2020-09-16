@@ -12,7 +12,8 @@ object ArmNoneEabiGdb {
     private var launchTask: Task<Int?>? = null
 
     fun launch(): LaunchResult {
-        val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get() ?: return LaunchResult.GnuArmEmbeddedPathIsNull
+        val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get()
+        if (gnuArmEmbeddedPath.isNullOrEmpty()) return LaunchResult.GnuArmEmbeddedPathIsNull
         launchTask = runAsync {
             launchProcess = ProcessBuilder().apply {
                 directory(File(gnuArmEmbeddedPath))
