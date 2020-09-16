@@ -19,10 +19,7 @@ class PluginOptionView : View("プラグインオプション") {
     @FXML private lateinit var textViewGnuArmEmbedded: TextField
 
     init {
-        textViewCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""
-        textViewStLinkGdbServer.text = Config.Plugin.STLinkGDBServer.get() ?: ""
-        textViewCubeProgrammer.text = Config.Plugin.CubeProgrammer.get() ?: ""
-        textViewGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
+        updateDisplayFromConfig()
     }
 
     fun findCubeIDE() {
@@ -39,6 +36,7 @@ class PluginOptionView : View("プラグインオプション") {
     }
 
     fun clickClose() {
+        updateDisplayFromConfig()
         close()
     }
 
@@ -50,5 +48,12 @@ class PluginOptionView : View("プラグインオプション") {
             Config.Plugin.GnuArmEmbedded.put(textViewGnuArmEmbedded.text)
         }
         close()
+    }
+
+    private fun updateDisplayFromConfig() {
+        textViewCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""
+        textViewStLinkGdbServer.text = Config.Plugin.STLinkGDBServer.get() ?: ""
+        textViewCubeProgrammer.text = Config.Plugin.CubeProgrammer.get() ?: ""
+        textViewGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
     }
 }
