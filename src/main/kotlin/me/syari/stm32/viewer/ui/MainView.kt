@@ -28,15 +28,15 @@ class MainView : View("STM32ViewerKt") {
 
     @Suppress("unused") // fxml
     fun clickMenuRun() {
-        isRunning = isRunning.not()
         menuItemRun.text = if (isRunning) {
-            STLinkGDBServer.launch()
-            ArmNoneEabiGdb.launch()
-            "Stop"
-        } else {
             ArmNoneEabiGdb.cancel()
             STLinkGDBServer.cancel()
             "Run"
+        } else {
+            STLinkGDBServer.launch()
+            ArmNoneEabiGdb.launch()
+            "Stop"
         }
+        isRunning = isRunning.not()
     }
 }
