@@ -17,11 +17,16 @@ object STLinkGDBServer {
     fun launch(): LaunchResult {
         val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
         if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
+        val stLinkGdbServerFile = File(stLinkGdbServerPath)
+        if (!stLinkGdbServerFile.exists()) return LaunchResult.STLinkGDBServerNotExits
+        if (stLinkGdbServerFile.list()?.firstOrNull { it.startsWith("ST-LINK_gdbserver") } == null)
+            return LaunchResult.STLinkGDBServerNotExits
         val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
         if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
+        if (!File(cubeProgrammerPath).exists()) return LaunchResult.CubeProgrammerNotExits
         launchTask = runAsync {
             launchProcess = ProcessBuilder().apply {
-                directory(File(stLinkGdbServerPath))
+                directory(stLinkGdbServerFile)
                 command(
                     if (PlatformUtil.isWindows) {
                         listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
@@ -48,7 +53,9 @@ object STLinkGDBServer {
     enum class LaunchResult {
         Success,
         STLinkGDBServerPathIsNull,
-        CubeProgrammerPathIsNull
+        STLinkGDBServerNotExits,
+        CubeProgrammerPathIsNull,
+        CubeProgrammerNotExits
     }
 
     fun cancel() {
