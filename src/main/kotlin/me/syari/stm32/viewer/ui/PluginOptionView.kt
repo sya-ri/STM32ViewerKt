@@ -7,7 +7,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.debug.Plugin
-import me.syari.stm32.viewer.debug.Plugins
 import me.syari.stm32.viewer.util.finally
 import tornadofx.View
 import tornadofx.chooseFile
@@ -37,8 +36,8 @@ class PluginOptionView : View("プラグインオプション") {
             textViewCubeIDE.text = it.path
             findCubeIDETask = runAsync {
                 buttonFindCubeIDE.isDisable = true
-                val pluginsFolder = Plugins.findPluginsFolder(it)
-                val plugins = Plugins.findPlugins(pluginsFolder)
+                val pluginsFolder = Plugin.findPluginsFolder(it)
+                val plugins = Plugin.findPlugins(pluginsFolder)
                 textViewStLinkGdbServer.text = plugins?.get(Plugin.Type.StLinkGdbServer) ?: ""
                 textViewCubeProgrammer.text = plugins?.get(Plugin.Type.CubeProgrammer) ?: ""
                 textViewGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""

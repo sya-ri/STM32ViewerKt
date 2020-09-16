@@ -1,8 +1,45 @@
 package me.syari.stm32.viewer.debug
 
+import me.syari.stm32.viewer.util.child
 import java.io.File
 
 object Plugin {
+    fun findPluginsFolder(cube_ide_file: File): File? {
+        fun findPluginsFolderRecursive(folder: File): File? {
+            folder.listFiles()?.forEach { file ->
+                if (file.isDirectory) {
+                    if (file.name == "plugins") {
+                        return file
+                    }
+                    findPluginsFolderRecursive(file)?.let {
+                        return it
+                    }
+                }
+            }
+            return null
+        }
+
+        val firstFindDirectory = if (cube_ide_file.isDirectory) {
+            cube_ide_file
+        } else {
+            cube_ide_file.parentFile
+        }
+        return findPluginsFolderRecursive(firstFindDirectory)
+    }
+
+    fun findPlugins(plugins_folder: File?): Map<Type, String>? {
+        if (plugins_folder == null || !plugins_folder.exists() || !plugins_folder.isDirectory) return null
+        return mutableMapOf<Type, String>().apply {
+            plugins_folder.listFiles()?.forEach { file ->
+                if (file.isDirectory) {
+                    Type.match(file.name)?.let {
+                        put(it, file.child("tools", "bin").path)
+                    }
+                }
+            }
+        }
+    }
+
     enum class Type(
         val directoryName: String,
     ) {
@@ -13,17 +50,6 @@ object Plugin {
         companion object {
             fun match(directoryName: String): Type? {
                 return values().firstOrNull { directoryName.startsWith(it.directoryName) }
-            }
-        }
-    }
-
-    data class Data(val type: Type, val directory: File?) {
-        val path
-            get() = directory?.path ?: ""
-
-        companion object {
-            fun fromPath(type: Type, path: String?): Data {
-                return Data(type, path?.let { File(it) })
             }
         }
     }
