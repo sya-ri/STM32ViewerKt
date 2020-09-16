@@ -1,5 +1,6 @@
 package me.syari.stm32.viewer.ui
 
+import javafx.concurrent.Task
 import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.Button
@@ -7,7 +8,7 @@ import javafx.scene.control.TextField
 import me.syari.stm32.viewer.Plugins
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.debug.Plugin
-import me.syari.stm32.viewer.util.TaskContainer
+import me.syari.stm32.viewer.util.finally
 import tornadofx.View
 import tornadofx.chooseFile
 import java.io.File
@@ -25,9 +26,7 @@ class PluginOptionView : View("プラグインオプション") {
         updateDisplayFromConfig()
     }
 
-    private val findCubeIDETask = TaskContainer<Unit> {
-        buttonFindCubeIDE.isDisable = false
-    }
+    private var findCubeIDETask: Task<Unit>? = null
 
     @Suppress("unused") // fxml
     fun clickFindCubeIDE() {
@@ -35,30 +34,30 @@ class PluginOptionView : View("プラグインオプション") {
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
             textViewCubeIDE.text = it.path
-            findCubeIDETask.task = runAsync {
+            findCubeIDETask = runAsync {
                 buttonFindCubeIDE.isDisable = true
                 val pluginsFolder = Plugins.findPluginsFolder(it)
                 val plugins = Plugins.findPlugins(pluginsFolder)
                 textViewStLinkGdbServer.text = plugins?.get(Plugin.Type.StLinkGdbServer) ?: ""
                 textViewCubeProgrammer.text = plugins?.get(Plugin.Type.CubeProgrammer) ?: ""
                 textViewGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""
-            } ui {
+            } finally {
                 buttonFindCubeIDE.isDisable = false
-                findCubeIDETask.task = null
+                findCubeIDETask = null
             }
         }
     }
 
     @Suppress("unused") // fxml
     fun clickClose() {
-        findCubeIDETask.cancel()
+        findCubeIDETask?.cancel()
         updateDisplayFromConfig()
         close()
     }
 
     @Suppress("unused") // fxml
     fun clickSave() {
-        findCubeIDETask.cancel()
+        findCubeIDETask?.cancel()
         Config.saveFile {
             Config.Plugin.CubeIDE.put(textViewCubeIDE.text)
             Config.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
