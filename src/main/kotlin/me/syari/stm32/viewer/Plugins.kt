@@ -1,22 +1,11 @@
 package me.syari.stm32.viewer
 
+import me.syari.stm32.viewer.debug.Plugin
 import me.syari.stm32.viewer.util.PlatformUtil
 import me.syari.stm32.viewer.util.child
 import java.io.File
 
-enum class Plugin(
-    val folder_name: String,
-) {
-    CubeProgrammer("com.st.stm32cube.ide.mcu.externaltools.cubeprogrammer"),
-    StLinkGdbServer("com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server"),
-    GnuArmEmbedded("com.st.stm32cube.ide.mcu.externaltools.gnu-arm-embedded");
 
-    companion object {
-        fun match(folder_name: String): Plugin? {
-            return values().firstOrNull { folder_name.startsWith(it.folder_name) }
-        }
-    }
-}
 
 object Plugins {
     private const val MAX_DEPTH = 3
@@ -48,12 +37,12 @@ object Plugins {
         return findPluginsFolderRecursive(firstFindDirectory, 0)
     }
 
-    fun findPlugins(plugins_folder: File?): Map<Plugin, String>? {
+    fun findPlugins(plugins_folder: File?): Map<Plugin.Type, String>? {
         if (plugins_folder == null || !plugins_folder.exists() || !plugins_folder.isDirectory) return null
-        return mutableMapOf<Plugin, String>().apply {
+        return mutableMapOf<Plugin.Type, String>().apply {
             plugins_folder.listFiles()?.forEach { file ->
                 if (!file.isDirectory) return@forEach
-                Plugin.match(file.name)?.let {
+                Plugin.Type.match(file.name)?.let {
                     put(it, file.child("tools", "bin").path)
                 }
             }

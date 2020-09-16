@@ -6,7 +6,7 @@ import java.util.*
 open class ConfigFile(private val file: File) {
     private val properties = Properties()
 
-    fun key(name: String) = Key(this, name)
+    fun <T> key(name: String, type: Key.Type<T>) = Key(this, name, type)
 
     fun load() {
         if (file.exists()) {
@@ -14,12 +14,12 @@ open class ConfigFile(private val file: File) {
         }
     }
 
-    fun get(key: Key): String? {
-        return properties.getProperty(key.name)
+    fun <T> get(key: Key<T>): T? {
+        return key.type.parse(properties.getProperty(key.name))
     }
 
-    fun put(key: Key, value: String?) {
-        properties[key.name] = value
+    fun <T> put(key: Key<T>, value: T?) {
+        properties[key.name] = key.type.unparse(value)
     }
 
     private fun saveFile() {
@@ -34,9 +34,15 @@ open class ConfigFile(private val file: File) {
         saveFile()
     }
 
-    class Key(private val configFile: ConfigFile, val name: String) {
+    class Key<T>(private val configFile: ConfigFile, val name: String, val type: Type<T>) {
         fun get() = configFile.get(this)
 
-        fun put(value: String?) = configFile.put(this, value)
+        fun put(value: T?) = configFile.put(this, value)
+
+        class Type<T>(val parse: (String?) -> T?, val unparse: (T?) -> String?) {
+            companion object {
+                val string = Type({ it }, { it })
+            }
+        }
     }
 }

@@ -3,9 +3,9 @@ package me.syari.stm32.viewer.ui
 import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.TextField
-import me.syari.stm32.viewer.Plugin
 import me.syari.stm32.viewer.Plugins
 import me.syari.stm32.viewer.config.Config
+import me.syari.stm32.viewer.debug.Plugin
 import tornadofx.View
 import tornadofx.chooseFile
 import java.io.File
@@ -29,9 +29,9 @@ class PluginOptionView : View("プラグインオプション") {
             textViewCubeIDE.text = it.path
             val pluginsFolder = Plugins.findPluginsFolder(it)
             val plugins = Plugins.findPlugins(pluginsFolder)
-            textViewStLinkGdbServer.text = plugins?.get(Plugin.StLinkGdbServer) ?: ""
-            textViewCubeProgrammer.text = plugins?.get(Plugin.CubeProgrammer) ?: ""
-            textViewGnuArmEmbedded.text = plugins?.get(Plugin.GnuArmEmbedded) ?: ""
+            textViewStLinkGdbServer.text = plugins?.get(Plugin.Type.StLinkGdbServer) ?: ""
+            textViewCubeProgrammer.text = plugins?.get(Plugin.Type.CubeProgrammer) ?: ""
+            textViewGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""
         }
     }
 
