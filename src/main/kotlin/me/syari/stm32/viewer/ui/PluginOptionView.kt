@@ -1,6 +1,5 @@
 package me.syari.stm32.viewer.ui
 
-import javafx.concurrent.Task
 import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.Button
@@ -8,6 +7,7 @@ import javafx.scene.control.TextField
 import me.syari.stm32.viewer.Plugins
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.debug.Plugin
+import me.syari.stm32.viewer.util.TaskContainer
 import tornadofx.View
 import tornadofx.chooseFile
 import java.io.File
@@ -25,14 +25,8 @@ class PluginOptionView : View("プラグインオプション") {
         updateDisplayFromConfig()
     }
 
-    var findCubeIDETask: Task<Unit>? = null
-
-    private fun cancelFindCubeIDETask() {
-        findCubeIDETask?.let {
-            it.cancel()
-            findCubeIDETask = null
-            buttonFindCubeIDE.isDisable = false
-        }
+    private val findCubeIDETask = TaskContainer<Unit> {
+        buttonFindCubeIDE.isDisable = false
     }
 
     fun clickFindCubeIDE() {
@@ -40,7 +34,7 @@ class PluginOptionView : View("プラグインオプション") {
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
             textViewCubeIDE.text = it.path
-            findCubeIDETask = runAsync {
+            findCubeIDETask.task = runAsync {
                 buttonFindCubeIDE.isDisable = true
                 val pluginsFolder = Plugins.findPluginsFolder(it)
                 val plugins = Plugins.findPlugins(pluginsFolder)
@@ -49,19 +43,19 @@ class PluginOptionView : View("プラグインオプション") {
                 textViewGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""
             } ui {
                 buttonFindCubeIDE.isDisable = false
-                findCubeIDETask = null
+                findCubeIDETask.task = null
             }
         }
     }
 
     fun clickClose() {
-        cancelFindCubeIDETask()
+        findCubeIDETask.cancel()
         updateDisplayFromConfig()
         close()
     }
 
     fun clickSave() {
-        cancelFindCubeIDETask()
+        findCubeIDETask.cancel()
         Config.saveFile {
             Config.Plugin.CubeIDE.put(textViewCubeIDE.text)
             Config.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
