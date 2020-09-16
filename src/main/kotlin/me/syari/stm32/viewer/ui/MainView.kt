@@ -58,7 +58,12 @@ class MainView : View("STM32ViewerKt") {
                     return
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerPathIsNull -> {
-                    alert(Alert.AlertType.ERROR, "CubeProgrammer を設定してください", "File -> Option -> Plugin", ButtonType.OK)
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "CubeProgrammer を設定してください",
+                        "File -> Option -> Plugin",
+                        ButtonType.OK
+                    )
                     return
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerNotExits -> {
@@ -71,7 +76,37 @@ class MainView : View("STM32ViewerKt") {
                     return
                 }
             }
-            ArmNoneEabiGdb.launch()
+            when (ArmNoneEabiGdb.launch()) {
+                ArmNoneEabiGdb.LaunchResult.Success -> {
+                }
+                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedPathIsNull -> {
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "GNU Arm Embedded を設定してください",
+                        "File -> Option -> Plugin",
+                        ButtonType.OK
+                    )
+                    return
+                }
+                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExits -> {
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "GNU Arm Embedded が見つかりませんでした",
+                        "File -> Option -> Plugin",
+                        ButtonType.OK
+                    )
+                    return
+                }
+                ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExits -> {
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "arm-none-eabi-gdb が見つかりませんでした",
+                        "File -> Option -> Plugin",
+                        ButtonType.OK
+                    )
+                    return
+                }
+            }
             "Stop"
         }
         isRunning = isRunning.not()
