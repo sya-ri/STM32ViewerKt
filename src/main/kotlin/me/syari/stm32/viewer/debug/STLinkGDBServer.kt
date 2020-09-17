@@ -27,38 +27,39 @@ object STLinkGDBServer {
         if (cubeProgrammerFile.exists().not()) return LaunchResult.CubeProgrammerNotExits
         if (cubeProgrammerFile.list()?.firstOrNull { it.startsWith("STM32_Programmer_CLI") } == null)
             return LaunchResult.CubeProgrammerNotExits
-        launchTask = runAsync {
-            launchProcess = ProcessBuilder().apply {
-                directory(stLinkGdbServerFile)
-                command(
-                    if (PlatformUtil.isWindows) {
-                        listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
-                    } else {
-                        listOf("./ST-LINK_gdbserver")
-                    } + listOf("-d", "-v", "-cp", "'$cubeProgrammerPath'")
-                )
-            }.start()
-            launchProcess?.waitFor()
-        } finally {
-            if (launchProcess?.isAlive == false) {
-                ExitErrorMessage.get(launchProcess?.exitValue())?.let { message ->
-                    alert(Alert.AlertType.ERROR, message, null, ButtonType.OK)
+        return LaunchResult.Success {
+            launchTask = runAsync {
+                launchProcess = ProcessBuilder().apply {
+                    directory(stLinkGdbServerFile)
+                    command(
+                        if (PlatformUtil.isWindows) {
+                            listOf("cmd", "/c", "ST-LINK_gdbserver.exe")
+                        } else {
+                            listOf("./ST-LINK_gdbserver")
+                        } + listOf("-d", "-v", "-cp", "'$cubeProgrammerPath'")
+                    )
+                }.start()
+                launchProcess?.waitFor()
+            } finally {
+                if (launchProcess?.isAlive == false) {
+                    ExitErrorMessage.get(launchProcess?.exitValue())?.let { message ->
+                        alert(Alert.AlertType.ERROR, message, null, ButtonType.OK)
+                    }
+                }
+                launchProcess?.let {
+                    it.destroy()
+                    launchProcess = null
                 }
             }
-            launchProcess?.let {
-                it.destroy()
-                launchProcess = null
-            }
         }
-        return LaunchResult.Success
     }
 
-    enum class LaunchResult {
-        Success,
-        STLinkGDBServerPathIsNull,
-        STLinkGDBServerNotExits,
-        CubeProgrammerPathIsNull,
-        CubeProgrammerNotExits
+    sealed class LaunchResult {
+        class Success(val start: () -> Unit) : LaunchResult()
+        object STLinkGDBServerPathIsNull : LaunchResult()
+        object STLinkGDBServerNotExits : LaunchResult()
+        object CubeProgrammerPathIsNull : LaunchResult()
+        object CubeProgrammerNotExits : LaunchResult()
     }
 
     fun cancel() {

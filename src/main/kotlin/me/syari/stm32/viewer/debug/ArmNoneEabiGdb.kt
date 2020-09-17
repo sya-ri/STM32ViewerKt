@@ -18,34 +18,35 @@ object ArmNoneEabiGdb {
         if (gnuArmEmbeddedFile.exists().not()) return LaunchResult.GnuArmEmbeddedNotExits
         if (gnuArmEmbeddedFile.list()?.firstOrNull { it.startsWith("arm-none-eabi-gdb") } == null)
             return LaunchResult.ArmNoneEabiGdbNotExits
-        launchTask = runAsync {
-            launchProcess = ProcessBuilder().apply {
-                directory(gnuArmEmbeddedFile)
-                redirectInput(ProcessBuilder.Redirect.INHERIT)
-                redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                command(
-                    if (PlatformUtil.isWindows) {
-                        listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
-                    } else {
-                        listOf("./arm-none-eabi-gdb")
-                    }
-                )
-            }.start()
-            launchProcess?.waitFor()
-        } finally {
-            launchProcess?.let {
-                it.destroy()
-                launchProcess = null
+        return LaunchResult.Success {
+            launchTask = runAsync {
+                launchProcess = ProcessBuilder().apply {
+                    directory(gnuArmEmbeddedFile)
+                    redirectInput(ProcessBuilder.Redirect.INHERIT)
+                    redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                    command(
+                        if (PlatformUtil.isWindows) {
+                            listOf("cmd", "/c", "arm-none-eabi-gdb.exe")
+                        } else {
+                            listOf("./arm-none-eabi-gdb")
+                        }
+                    )
+                }.start()
+                launchProcess?.waitFor()
+            } finally {
+                launchProcess?.let {
+                    it.destroy()
+                    launchProcess = null
+                }
             }
         }
-        return LaunchResult.Success
     }
 
-    enum class LaunchResult {
-        Success,
-        GnuArmEmbeddedPathIsNull,
-        GnuArmEmbeddedNotExits,
-        ArmNoneEabiGdbNotExits
+    sealed class LaunchResult {
+        class Success(val start: () -> Unit) : LaunchResult()
+        object GnuArmEmbeddedPathIsNull : LaunchResult()
+        object GnuArmEmbeddedNotExits : LaunchResult()
+        object ArmNoneEabiGdbNotExits : LaunchResult()
     }
 
     fun cancel() {

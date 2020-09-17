@@ -36,8 +36,9 @@ class MainView : View("STM32ViewerKt") {
             STLinkGDBServer.cancel()
             "Run"
         } else {
-            when (STLinkGDBServer.launch()) {
-                STLinkGDBServer.LaunchResult.Success -> {
+            val stLinkGdbServerResult = STLinkGDBServer.launch()
+            when (stLinkGdbServerResult) {
+                is STLinkGDBServer.LaunchResult.Success -> {
                 }
                 STLinkGDBServer.LaunchResult.STLinkGDBServerPathIsNull -> {
                     alert(
@@ -76,8 +77,10 @@ class MainView : View("STM32ViewerKt") {
                     return
                 }
             }
-            when (ArmNoneEabiGdb.launch()) {
-                ArmNoneEabiGdb.LaunchResult.Success -> {
+            when (val armNoneEabiGdbLaunchResult = ArmNoneEabiGdb.launch()) {
+                is ArmNoneEabiGdb.LaunchResult.Success -> {
+                    stLinkGdbServerResult.start()
+                    armNoneEabiGdbLaunchResult.start()
                 }
                 ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedPathIsNull -> {
                     alert(
