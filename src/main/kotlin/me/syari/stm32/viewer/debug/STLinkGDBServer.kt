@@ -14,7 +14,7 @@ object STLinkGDBServer {
     private var launchProcess: Process? = null
     private var launchTask: Task<Int?>? = null
 
-    fun launch(): LaunchResult {
+    fun launch(onExit: () -> Unit): LaunchResult {
         val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
         if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
         val stLinkGdbServerFile = File(stLinkGdbServerPath)
@@ -50,6 +50,7 @@ object STLinkGDBServer {
                     it.destroy()
                     launchProcess = null
                 }
+                onExit()
             }
         }
     }

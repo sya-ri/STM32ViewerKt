@@ -36,7 +36,10 @@ class MainView : View("STM32ViewerKt") {
             STLinkGDBServer.cancel()
             "Run"
         } else {
-            val stLinkGdbServerResult = STLinkGDBServer.launch()
+            val stLinkGdbServerResult = STLinkGDBServer.launch {
+                ArmNoneEabiGdb.cancel()
+                menuItemRun.text = "Run"
+            }
             when (stLinkGdbServerResult) {
                 is STLinkGDBServer.LaunchResult.Success -> {
                 }
