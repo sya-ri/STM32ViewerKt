@@ -73,7 +73,9 @@ object STLinkGDBServer {
     object ExitErrorMessage {
         private val list = mapOf(
             1 to "デバイスに接続出来ませんでした",
-            2 to "デバイスが見つかりませんでした"
+            2 to "デバイスが見つかりませんでした",
+            4 to "ST-Link がデバイスに接続されていません",
+            254 to "デバイスとの接続が切れました"
         )
 
         fun get(exitValue: Int?) = list[exitValue]
