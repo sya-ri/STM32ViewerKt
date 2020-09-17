@@ -19,7 +19,10 @@ class MainView : View("STM32ViewerKt") {
 
     @Suppress("unused") // fxml
     fun clickMenuOpenElf() {
-        chooseFile(null, arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf")))
+        val files = chooseFile(null, arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf")))
+        files.firstOrNull()?.let {
+            ArmNoneEabiGdb.elfFile = it
+        }
     }
 
     @Suppress("unused") // fxml
@@ -108,6 +111,15 @@ class MainView : View("STM32ViewerKt") {
                         Alert.AlertType.ERROR,
                         "arm-none-eabi-gdb が見つかりませんでした",
                         "File -> Option -> Plugin",
+                        ButtonType.OK
+                    )
+                    return
+                }
+                ArmNoneEabiGdb.LaunchResult.ElfFileIsNull -> {
+                    alert(
+                        Alert.AlertType.ERROR,
+                        ".elf ファイルを選択していません",
+                        "File -> Open .elf",
                         ButtonType.OK
                     )
                     return

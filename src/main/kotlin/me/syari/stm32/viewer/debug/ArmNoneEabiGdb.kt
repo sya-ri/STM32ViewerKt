@@ -18,6 +18,7 @@ object ArmNoneEabiGdb {
         if (gnuArmEmbeddedFile.exists().not()) return LaunchResult.GnuArmEmbeddedNotExits
         if (gnuArmEmbeddedFile.list()?.firstOrNull { it.startsWith("arm-none-eabi-gdb") } == null)
             return LaunchResult.ArmNoneEabiGdbNotExits
+        if (elfFile == null) return LaunchResult.ElfFileIsNull
         return LaunchResult.Success {
             launchTask = runAsync {
                 launchProcess = ProcessBuilder().apply {
@@ -47,6 +48,7 @@ object ArmNoneEabiGdb {
         object GnuArmEmbeddedPathIsNull : LaunchResult()
         object GnuArmEmbeddedNotExits : LaunchResult()
         object ArmNoneEabiGdbNotExits : LaunchResult()
+        object ElfFileIsNull : LaunchResult()
     }
 
     fun cancel() {
@@ -55,4 +57,6 @@ object ArmNoneEabiGdb {
             launchTask = null
         }
     }
+
+    var elfFile: File? = null
 }
