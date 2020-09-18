@@ -6,8 +6,8 @@
 3. Rename Directory
 
 # Current Version
-| Platform | Version       |
-| -------- | ------------- |
-| Windows  | jdk-11.0.8+10 |
-| Mac      | jdk-11.0.8+10 |
-| Linux    | jdk-11.0.8+10 |
+| Platform | DirectoryName | Version       |
+| -------- | ------------- | ------------- |
+| Windows  | windows       | jdk-11.0.8+10 |
+| Mac      | mac           | jdk-11.0.8+10 |
+| Linux    | linux         | jdk-11.0.8+10 |
