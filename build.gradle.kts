@@ -1,4 +1,5 @@
 import io.github.fvarrui.javapackager.gradle.PackageTask
+import io.github.fvarrui.javapackager.model.HeaderType
 import io.github.fvarrui.javapackager.model.Platform
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -35,22 +36,39 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
+val packageTaskMainClass = "$group.MainKt"
+val packageTaskJdkDir = projectDir.resolve("jdk")
+val packageTaskOutputDirectory = buildDir.resolve("package")
+
 tasks.register<PackageTask>("packageForWindows") {
     dependsOn("build")
     platform = Platform.windows
+    mainClass = packageTaskMainClass
+    jdkPath = packageTaskJdkDir.resolve("windows")
+    outputDirectory = packageTaskOutputDirectory.resolve("windows")
+    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    isBundleJre = true
+    winConfig.headerType = HeaderType.gui
 }
 
 tasks.register<PackageTask>("packageForMac") {
     dependsOn("build")
     platform = Platform.mac
+    mainClass = packageTaskMainClass
+    jdkPath = packageTaskJdkDir.resolve("mac").resolve("Contents").resolve("Home")
+    outputDirectory = packageTaskOutputDirectory.resolve("mac")
+    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    isBundleJre = true
+    macConfig.isGenerateDmg = false
+    macConfig.isGeneratePkg = true
 }
 
 tasks.register<PackageTask>("packageForLinux") {
     dependsOn("build")
     platform = Platform.linux
-}
-
-tasks.register("packageForAllPlatforms") {
-    dependsOn("packageForWindows", "packageForMac", "packageForLinux")
-    group = "JavaPackager"
+    mainClass = packageTaskMainClass
+    jdkPath = packageTaskJdkDir.resolve("linux")
+    outputDirectory = packageTaskOutputDirectory.resolve("linux")
+    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    isBundleJre = true
 }
