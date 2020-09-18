@@ -36,8 +36,10 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
+val packageDir = projectDir.resolve("package")
+val packageIconDir = packageDir.resolve("icons")
 val packageTaskMainClass = "$group.MainKt"
-val packageTaskJdkDir = projectDir.resolve("jdk")
+val packageTaskJdkDir = packageDir.resolve("jdk")
 val packageTaskOutputDirectory = buildDir.resolve("package")
 
 tasks.register<PackageTask>("packageForWindows") {
@@ -49,6 +51,7 @@ tasks.register<PackageTask>("packageForWindows") {
     assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
     isBundleJre = true
     winConfig.headerType = HeaderType.gui
+    winConfig.icoFile = packageIconDir.resolve("icon.ico")
 }
 
 tasks.register<PackageTask>("packageForMac") {
@@ -61,6 +64,7 @@ tasks.register<PackageTask>("packageForMac") {
     isBundleJre = true
     macConfig.isGenerateDmg = false
     macConfig.isGeneratePkg = true
+    macConfig.icnsFile = packageIconDir.resolve("icon.icns")
 }
 
 tasks.register<PackageTask>("packageForLinux") {
@@ -71,4 +75,5 @@ tasks.register<PackageTask>("packageForLinux") {
     outputDirectory = packageTaskOutputDirectory.resolve("linux")
     assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
     isBundleJre = true
+    linuxConfig.pngFile = packageIconDir.resolve("icon.png")
 }
