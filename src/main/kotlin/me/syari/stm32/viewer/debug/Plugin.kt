@@ -1,6 +1,5 @@
 package me.syari.stm32.viewer.debug
 
-import me.syari.stm32.viewer.util.child
 import java.io.File
 
 object Plugin {
@@ -33,7 +32,7 @@ object Plugin {
             plugins_folder.listFiles()?.forEach { file ->
                 if (file.isDirectory) {
                     Type.match(file.name)?.let {
-                        put(it, file.child("tools", "bin").path)
+                        put(it, file.resolve("tools").resolve("bin").path)
                     }
                 }
             }
