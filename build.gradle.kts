@@ -10,6 +10,7 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.4.10"
+    id("org.openjfx.javafxplugin") version "0.0.9"
 }
 
 apply(plugin = "io.github.fvarrui.javapackager.plugin")
@@ -25,8 +26,13 @@ dependencies {
     implementation("no.tornado:tornadofx:1.7.20")
 }
 
+javafx {
+    version = "15"
+    modules = listOf("javafx.controls", "javafx.fxml")
+}
+
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
 tasks.register<PackageTask>("packageForWindows") {
