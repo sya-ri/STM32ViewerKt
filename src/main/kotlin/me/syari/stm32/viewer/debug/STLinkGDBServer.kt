@@ -4,10 +4,7 @@ import javafx.concurrent.Task
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import me.syari.stm32.viewer.config.Config
-import me.syari.stm32.viewer.util.PlatformUtil
-import me.syari.stm32.viewer.util.existsOrNull
-import me.syari.stm32.viewer.util.finally
-import me.syari.stm32.viewer.util.findStartsWith
+import me.syari.stm32.viewer.util.*
 import tornadofx.alert
 import tornadofx.runAsync
 import java.io.File
@@ -17,14 +14,14 @@ object STLinkGDBServer {
     private var launchTask: Task<Int?>? = null
 
     fun launch(onExit: () -> Unit): LaunchResult {
-        val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
-        if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
+        val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get().nullOnEmpty
+            ?: return LaunchResult.STLinkGDBServerPathIsNull
         val stLinkGdbServerFile = File(stLinkGdbServerPath).existsOrNull
             ?: return LaunchResult.STLinkGDBServerNotExits
         if (stLinkGdbServerFile.findStartsWith("ST-LINK_gdbserver").not())
             return LaunchResult.STLinkGDBServerNotExits
-        val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
-        if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
+        val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get().nullOnEmpty
+            ?: return LaunchResult.CubeProgrammerPathIsNull
         val cubeProgrammerFile = File(cubeProgrammerPath).existsOrNull
             ?: return LaunchResult.CubeProgrammerNotExits
         if (cubeProgrammerFile.findStartsWith("STM32_Programmer_CLI").not())

@@ -2,10 +2,7 @@ package me.syari.stm32.viewer.debug
 
 import javafx.concurrent.Task
 import me.syari.stm32.viewer.config.Config
-import me.syari.stm32.viewer.util.PlatformUtil
-import me.syari.stm32.viewer.util.existsOrNull
-import me.syari.stm32.viewer.util.finally
-import me.syari.stm32.viewer.util.findStartsWith
+import me.syari.stm32.viewer.util.*
 import tornadofx.runAsync
 import java.io.File
 
@@ -14,8 +11,8 @@ object ArmNoneEabiGdb {
     private var launchTask: Task<Int?>? = null
 
     fun launch(): LaunchResult {
-        val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get()
-        if (gnuArmEmbeddedPath.isNullOrEmpty()) return LaunchResult.GnuArmEmbeddedPathIsNull
+        val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get().nullOnEmpty
+            ?: return LaunchResult.GnuArmEmbeddedPathIsNull
         val gnuArmEmbeddedFile = File(gnuArmEmbeddedPath).existsOrNull
             ?: return LaunchResult.GnuArmEmbeddedNotExits
         if (gnuArmEmbeddedFile.findStartsWith("arm-none-eabi-gdb").not())
