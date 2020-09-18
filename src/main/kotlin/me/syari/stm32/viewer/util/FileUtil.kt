@@ -6,3 +6,5 @@ val File.existsOrNull
     get() = if (exists()) this else null
 
 fun fileOrNull(pathname: String?) = pathname?.let { File(it) }
+
+fun File.findStartsWith(prefix: String) = list()?.firstOrNull { it.startsWith(prefix) } != null

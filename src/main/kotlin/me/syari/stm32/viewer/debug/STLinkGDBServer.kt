@@ -7,6 +7,7 @@ import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.PlatformUtil
 import me.syari.stm32.viewer.util.existsOrNull
 import me.syari.stm32.viewer.util.finally
+import me.syari.stm32.viewer.util.findStartsWith
 import tornadofx.alert
 import tornadofx.runAsync
 import java.io.File
@@ -20,13 +21,13 @@ object STLinkGDBServer {
         if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
         val stLinkGdbServerFile = File(stLinkGdbServerPath).existsOrNull
             ?: return LaunchResult.STLinkGDBServerNotExits
-        if (stLinkGdbServerFile.list()?.firstOrNull { it.startsWith("ST-LINK_gdbserver") } == null)
+        if (stLinkGdbServerFile.findStartsWith("ST-LINK_gdbserver").not())
             return LaunchResult.STLinkGDBServerNotExits
         val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
         if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
         val cubeProgrammerFile = File(cubeProgrammerPath).existsOrNull
             ?: return LaunchResult.CubeProgrammerNotExits
-        if (cubeProgrammerFile.list()?.firstOrNull { it.startsWith("STM32_Programmer_CLI") } == null)
+        if (cubeProgrammerFile.findStartsWith("STM32_Programmer_CLI").not())
             return LaunchResult.CubeProgrammerNotExits
         return LaunchResult.Success {
             launchTask = runAsync {
