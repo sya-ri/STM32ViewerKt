@@ -8,3 +8,5 @@ val File.existsOrNull
 fun fileOrNull(pathname: String?) = pathname?.let { File(it) }
 
 fun File.findStartsWith(prefix: String) = list()?.firstOrNull { it.startsWith(prefix) } != null
+
+inline fun File.forEachFiles(action: (File) -> Unit) = listFiles()?.forEach(action)

@@ -1,11 +1,12 @@
 package me.syari.stm32.viewer.debug
 
+import me.syari.stm32.viewer.util.forEachFiles
 import java.io.File
 
 object Plugin {
     fun findPluginsFolder(cube_ide_file: File): File? {
         fun findPluginsFolderRecursive(folder: File): File? {
-            folder.listFiles()?.forEach { file ->
+            folder.forEachFiles { file ->
                 if (file.isDirectory) {
                     if (file.name == "plugins") {
                         return file
@@ -29,7 +30,7 @@ object Plugin {
     fun findPlugins(plugins_folder: File?): Map<Type, String>? {
         if (plugins_folder == null || plugins_folder.exists().not() || plugins_folder.isDirectory.not()) return null
         return mutableMapOf<Type, String>().apply {
-            plugins_folder.listFiles()?.forEach { file ->
+            plugins_folder.forEachFiles { file ->
                 if (file.isDirectory) {
                     Type.match(file.name)?.let {
                         put(it, file.resolve("tools").resolve("bin").path)
