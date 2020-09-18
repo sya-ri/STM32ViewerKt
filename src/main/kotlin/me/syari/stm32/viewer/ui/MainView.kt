@@ -19,8 +19,9 @@ class MainView : View("STM32ViewerKt") {
 
     @Suppress("unused") // fxml
     fun clickMenuOpenElf() {
-        val files = chooseFile(null, arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf")))
-        files.firstOrNull()?.let {
+        val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
+        val file = chooseFile(null, filterOnlyElf).firstOrNull()
+        file?.let {
             ArmNoneEabiGdb.elfFile = it
         }
     }

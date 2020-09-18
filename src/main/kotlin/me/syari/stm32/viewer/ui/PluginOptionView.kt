@@ -31,8 +31,8 @@ class PluginOptionView : View("プラグインオプション") {
     @Suppress("unused") // fxml
     fun clickFindCubeIDE() {
         val initialDirectory = fileOrNull(textViewCubeIDE.text)?.parentFile?.existsOrNull
-        val file = chooseFile(null, emptyArray(), initialDirectory)
-        file.firstOrNull()?.let {
+        val file = chooseFile(null, emptyArray(), initialDirectory).firstOrNull()
+        file?.let {
             textViewCubeIDE.text = it.path
             findCubeIDETask = runAsync {
                 buttonFindCubeIDE.isDisable = true
