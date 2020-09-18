@@ -5,6 +5,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.PlatformUtil
+import me.syari.stm32.viewer.util.existsOrNull
 import me.syari.stm32.viewer.util.finally
 import tornadofx.alert
 import tornadofx.runAsync
@@ -17,14 +18,14 @@ object STLinkGDBServer {
     fun launch(onExit: () -> Unit): LaunchResult {
         val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get()
         if (stLinkGdbServerPath.isNullOrEmpty()) return LaunchResult.STLinkGDBServerPathIsNull
-        val stLinkGdbServerFile = File(stLinkGdbServerPath)
-        if (stLinkGdbServerFile.exists().not()) return LaunchResult.STLinkGDBServerNotExits
+        val stLinkGdbServerFile = File(stLinkGdbServerPath).existsOrNull
+            ?: return LaunchResult.STLinkGDBServerNotExits
         if (stLinkGdbServerFile.list()?.firstOrNull { it.startsWith("ST-LINK_gdbserver") } == null)
             return LaunchResult.STLinkGDBServerNotExits
         val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get()
         if (cubeProgrammerPath.isNullOrEmpty()) return LaunchResult.CubeProgrammerPathIsNull
-        val cubeProgrammerFile = File(cubeProgrammerPath)
-        if (cubeProgrammerFile.exists().not()) return LaunchResult.CubeProgrammerNotExits
+        val cubeProgrammerFile = File(cubeProgrammerPath).existsOrNull
+            ?: return LaunchResult.CubeProgrammerNotExits
         if (cubeProgrammerFile.list()?.firstOrNull { it.startsWith("STM32_Programmer_CLI") } == null)
             return LaunchResult.CubeProgrammerNotExits
         return LaunchResult.Success {

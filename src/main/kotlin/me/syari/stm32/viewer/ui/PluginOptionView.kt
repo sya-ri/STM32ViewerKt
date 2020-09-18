@@ -7,10 +7,11 @@ import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.debug.Plugin
+import me.syari.stm32.viewer.util.existsOrNull
+import me.syari.stm32.viewer.util.fileOrNull
 import me.syari.stm32.viewer.util.finally
 import tornadofx.View
 import tornadofx.chooseFile
-import java.io.File
 
 class PluginOptionView : View("プラグインオプション") {
     override val root: Parent by fxml("/fxml/PluginOptionView.fxml")
@@ -29,8 +30,7 @@ class PluginOptionView : View("プラグインオプション") {
 
     @Suppress("unused") // fxml
     fun clickFindCubeIDE() {
-        var initialDirectory = textViewCubeIDE.text?.let { File(it).parentFile }
-        if (initialDirectory?.exists()?.not() == true) initialDirectory = null
+        val initialDirectory = fileOrNull(textViewCubeIDE.text)?.parentFile?.existsOrNull
         val file = chooseFile(null, emptyArray(), initialDirectory)
         file.firstOrNull()?.let {
             textViewCubeIDE.text = it.path
