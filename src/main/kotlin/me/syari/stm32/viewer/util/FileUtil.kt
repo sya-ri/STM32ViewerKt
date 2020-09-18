@@ -2,6 +2,9 @@ package me.syari.stm32.viewer.util
 
 import java.io.File
 
+val File.orParentDirectory: File
+    get() = if (isDirectory) this else parentFile
+
 val File.existsOrNull
     get() = if (exists()) this else null
 

@@ -1,6 +1,7 @@
 package me.syari.stm32.viewer.debug
 
 import me.syari.stm32.viewer.util.forEachFiles
+import me.syari.stm32.viewer.util.orParentDirectory
 import java.io.File
 
 object Plugin {
@@ -19,12 +20,7 @@ object Plugin {
             return null
         }
 
-        val firstFindDirectory = if (cube_ide_file.isDirectory) {
-            cube_ide_file
-        } else {
-            cube_ide_file.parentFile
-        }
-        return findPluginsFolderRecursive(firstFindDirectory)
+        return findPluginsFolderRecursive(cube_ide_file.orParentDirectory)
     }
 
     fun findPlugins(plugins_folder: File?): Map<Type, String>? {
