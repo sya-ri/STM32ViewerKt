@@ -74,7 +74,7 @@ object ArmNoneEabiGdb {
             }
         }
 
-    private val recentElfFiles = Config.Debug.RecentElf.get()?.toMutableList() ?: mutableListOf()
+    private val recentElfFiles = Config.Debug.RecentElf.get()?.filter(String::isNotBlank).toMutableListOrEmpty()
 
     private var recentElfFileMenu: Menu? = null
 
