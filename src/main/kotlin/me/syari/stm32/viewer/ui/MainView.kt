@@ -62,7 +62,7 @@ class MainView : View("STM32ViewerKt") {
                     )
                     return
                 }
-                STLinkGDBServer.LaunchResult.STLinkGDBServerNotExits -> {
+                STLinkGDBServer.LaunchResult.STLinkGDBServerNotExists -> {
                     error(
                         "ST-Link GDB Server が見つかりませんでした",
                         "File -> Option -> Plugin"
@@ -76,7 +76,7 @@ class MainView : View("STM32ViewerKt") {
                     )
                     return
                 }
-                STLinkGDBServer.LaunchResult.CubeProgrammerNotExits -> {
+                STLinkGDBServer.LaunchResult.CubeProgrammerNotExists -> {
                     error(
                         "CubeProgrammer が見つかりませんでした",
                         "File -> Option -> Plugin"
@@ -96,14 +96,14 @@ class MainView : View("STM32ViewerKt") {
                     )
                     return
                 }
-                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExits -> {
+                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExists -> {
                     error(
                         "GNU Arm Embedded が見つかりませんでした",
                         "File -> Option -> Plugin"
                     )
                     return
                 }
-                ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExits -> {
+                ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExists -> {
                     error(
                         "arm-none-eabi-gdb が見つかりませんでした",
                         "File -> Option -> Plugin"
@@ -113,6 +113,13 @@ class MainView : View("STM32ViewerKt") {
                 ArmNoneEabiGdb.LaunchResult.ElfFileIsNull -> {
                     error(
                         ".elf ファイルを選択していません",
+                        "File -> Open .elf"
+                    )
+                    return
+                }
+                ArmNoneEabiGdb.LaunchResult.ElfFileNotExists -> {
+                    error(
+                        ".elf ファイルが見つかりませんでした",
                         "File -> Open .elf"
                     )
                     return

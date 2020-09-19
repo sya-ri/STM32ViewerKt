@@ -18,10 +18,11 @@ object ArmNoneEabiGdb {
         val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get().nullOnEmpty
             ?: return LaunchResult.GnuArmEmbeddedPathIsNull
         val gnuArmEmbeddedFile = File(gnuArmEmbeddedPath).existsOrNull
-            ?: return LaunchResult.GnuArmEmbeddedNotExits
+            ?: return LaunchResult.GnuArmEmbeddedNotExists
         if (gnuArmEmbeddedFile.findStartsWith("arm-none-eabi-gdb").not())
-            return LaunchResult.ArmNoneEabiGdbNotExits
+            return LaunchResult.ArmNoneEabiGdbNotExists
         if (elfFile == null) return LaunchResult.ElfFileIsNull
+        if (elfFile?.exists() != false) return LaunchResult.ElfFileNotExists
         return LaunchResult.Success {
             launchTask = runAsync {
                 launchProcess = ProcessBuilder().apply {
@@ -49,9 +50,10 @@ object ArmNoneEabiGdb {
     sealed class LaunchResult {
         class Success(val start: () -> Unit) : LaunchResult()
         object GnuArmEmbeddedPathIsNull : LaunchResult()
-        object GnuArmEmbeddedNotExits : LaunchResult()
-        object ArmNoneEabiGdbNotExits : LaunchResult()
+        object GnuArmEmbeddedNotExists : LaunchResult()
+        object ArmNoneEabiGdbNotExists : LaunchResult()
         object ElfFileIsNull : LaunchResult()
+        object ElfFileNotExists : LaunchResult()
     }
 
     fun cancel() {
