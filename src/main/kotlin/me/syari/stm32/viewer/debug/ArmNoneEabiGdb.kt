@@ -3,6 +3,7 @@ package me.syari.stm32.viewer.debug
 import javafx.concurrent.Task
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.control.SeparatorMenuItem
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.*
 import tornadofx.action
@@ -75,7 +76,7 @@ object ArmNoneEabiGdb {
 
     private val recentElfFiles = Config.Debug.RecentElf.get()?.toMutableList() ?: mutableListOf()
 
-    var recentElfFileMenu: Menu? = null
+    private var recentElfFileMenu: Menu? = null
 
     fun updateRecentElf(hookMenu: Menu? = null) {
         if (hookMenu != null) recentElfFileMenu = hookMenu
@@ -88,6 +89,18 @@ object ArmNoneEabiGdb {
                     }
                 })
             }
+            if (recentElfFiles.isNotEmpty()) {
+                menu.items.add(SeparatorMenuItem())
+            }
+            menu.items.add(MenuItem("Clear List").apply {
+                action {
+                    recentElfFiles.clear()
+                    Config.saveFile {
+                        Config.Debug.RecentElf.put(recentElfFiles)
+                    }
+                    updateRecentElf()
+                }
+            })
         }
     }
 }
