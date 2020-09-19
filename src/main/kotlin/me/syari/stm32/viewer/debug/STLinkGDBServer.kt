@@ -1,11 +1,9 @@
 package me.syari.stm32.viewer.debug
 
 import javafx.concurrent.Task
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.*
-import tornadofx.alert
+import tornadofx.error
 import tornadofx.runAsync
 import java.io.File
 
@@ -42,7 +40,7 @@ object STLinkGDBServer {
             } finally {
                 if (launchProcess?.isAlive == false) {
                     ExitErrorMessage.get(launchProcess?.exitValue())?.let { message ->
-                        alert(Alert.AlertType.ERROR, message, null, ButtonType.OK)
+                        error(message)
                     }
                 }
                 launchProcess?.let {

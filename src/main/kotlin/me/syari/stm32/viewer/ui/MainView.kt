@@ -2,8 +2,6 @@ package me.syari.stm32.viewer.ui
 
 import javafx.fxml.FXML
 import javafx.scene.Parent
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import javafx.scene.control.MenuItem
 import javafx.scene.input.TransferMode
 import javafx.stage.FileChooser
@@ -11,9 +9,8 @@ import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
 import me.syari.stm32.viewer.debug.STLinkGDBServer
 import me.syari.stm32.viewer.util.firstElfFileOrNull
 import tornadofx.View
-import tornadofx.alert
 import tornadofx.chooseFile
-
+import tornadofx.error
 
 class MainView : View("STM32ViewerKt") {
     override val root: Parent by fxml("/fxml/MainView.fxml")
@@ -59,38 +56,30 @@ class MainView : View("STM32ViewerKt") {
                 is STLinkGDBServer.LaunchResult.Success -> {
                 }
                 STLinkGDBServer.LaunchResult.STLinkGDBServerPathIsNull -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "ST-Link GDB Server を設定してください",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 STLinkGDBServer.LaunchResult.STLinkGDBServerNotExits -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "ST-Link GDB Server が見つかりませんでした",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerPathIsNull -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "CubeProgrammer を設定してください",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerNotExits -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "CubeProgrammer が見つかりませんでした",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
@@ -101,38 +90,30 @@ class MainView : View("STM32ViewerKt") {
                     armNoneEabiGdbLaunchResult.start()
                 }
                 ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedPathIsNull -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "GNU Arm Embedded を設定してください",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExits -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "GNU Arm Embedded が見つかりませんでした",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExits -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         "arm-none-eabi-gdb が見つかりませんでした",
-                        "File -> Option -> Plugin",
-                        ButtonType.OK
+                        "File -> Option -> Plugin"
                     )
                     return
                 }
                 ArmNoneEabiGdb.LaunchResult.ElfFileIsNull -> {
-                    alert(
-                        Alert.AlertType.ERROR,
+                    error(
                         ".elf ファイルを選択していません",
-                        "File -> Open .elf",
-                        ButtonType.OK
+                        "File -> Open .elf"
                     )
                     return
                 }
