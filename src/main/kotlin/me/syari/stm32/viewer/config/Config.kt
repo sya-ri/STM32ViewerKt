@@ -3,6 +3,10 @@ package me.syari.stm32.viewer.config
 import java.io.File
 
 object Config : ConfigFile(File("stm32_viewer.properties")) {
+    object Debug {
+        val RecentElf = key("debug.recent_elf", Key.Type.stringList)
+    }
+
     object Plugin {
         val CubeIDE = key("plugin.cube_ide", Key.Type.string)
         val STLinkGDBServer = key("plugin.st_link_gdb_server", Key.Type.string)

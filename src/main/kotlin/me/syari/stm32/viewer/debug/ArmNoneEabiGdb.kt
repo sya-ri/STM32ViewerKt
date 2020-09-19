@@ -1,8 +1,11 @@
 package me.syari.stm32.viewer.debug
 
 import javafx.concurrent.Task
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuItem
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.*
+import tornadofx.action
 import tornadofx.runAsync
 import java.io.File
 
@@ -61,6 +64,30 @@ object ArmNoneEabiGdb {
         set(value) {
             if (value != null) {
                 field = value
+                recentElfFiles.remove(value.path)
+                recentElfFiles.add(value.path)
+                Config.saveFile {
+                    Config.Debug.RecentElf.put(recentElfFiles)
+                }
+                updateRecentElf()
             }
         }
+
+    private val recentElfFiles = Config.Debug.RecentElf.get()?.toMutableList() ?: mutableListOf()
+
+    var recentElfFileMenu: Menu? = null
+
+    fun updateRecentElf(hookMenu: Menu? = null) {
+        if (hookMenu != null) recentElfFileMenu = hookMenu
+        recentElfFileMenu?.let { menu ->
+            menu.items.clear()
+            recentElfFiles.forEach {
+                menu.items.add(MenuItem(it).apply {
+                    action {
+                        elfFile = File(it)
+                    }
+                })
+            }
+        }
+    }
 }

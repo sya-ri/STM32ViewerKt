@@ -2,6 +2,7 @@ package me.syari.stm32.viewer.ui
 
 import javafx.fxml.FXML
 import javafx.scene.Parent
+import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.stage.FileChooser
 import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
@@ -16,9 +17,11 @@ import java.io.File
 class MainView : View("STM32ViewerKt") {
     override val root: Parent by fxml("/fxml/MainView.fxml")
 
+    @FXML lateinit var menuOpenRecent: Menu
     @FXML lateinit var menuItemRun: MenuItem
 
     init {
+        ArmNoneEabiGdb.updateRecentElf(menuOpenRecent)
         root.enableDragDropFile(File::isElfFile) {
             ArmNoneEabiGdb.elfFile = it
         }
@@ -39,6 +42,7 @@ class MainView : View("STM32ViewerKt") {
 
     @Suppress("unused") // fxml
     fun clickMenuRun() {
+        println(ArmNoneEabiGdb.elfFile?.path)
         menuItemRun.text = if (isRunning) {
             ArmNoneEabiGdb.cancel()
             STLinkGDBServer.cancel()

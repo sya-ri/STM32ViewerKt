@@ -42,6 +42,7 @@ open class ConfigFile(private val file: File) {
         class Type<T>(val parse: (String?) -> T?, val unparse: (T?) -> String?) {
             companion object {
                 val string = Type({ it }, { it })
+                val stringList = Type({ it?.split(",") }, { it?.joinToString(",") })
             }
         }
     }
