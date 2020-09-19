@@ -41,6 +41,7 @@ val packageIconDir = packageDir.resolve("icons")
 val packageTaskMainClass = "$group.MainKt"
 val packageTaskJdkDir = packageDir.resolve("jdk")
 val packageTaskOutputDirectory = buildDir.resolve("package")
+val packageTaskAssetsDirectory = buildDir.resolve("assets")
 
 tasks.register<PackageTask>("packageForWindows") {
     dependsOn("build")
@@ -48,9 +49,15 @@ tasks.register<PackageTask>("packageForWindows") {
     mainClass = packageTaskMainClass
     jdkPath = packageTaskJdkDir.resolve("windows")
     outputDirectory = packageTaskOutputDirectory.resolve("windows")
-    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    assetsDir = packageTaskAssetsDirectory.apply { mkdirs() }
     isBundleJre = true
     winConfig.headerType = HeaderType.gui
+    winConfig.isGenerateMsi = true
+    winConfig.isGenerateSetup = true // https://jrsoftware.org/isdl.php
+    winConfig.setupLanguages = linkedMapOf<String, String>(
+        "Japan" to "compiler:Languages/Japanese.isl"
+    )
+    winConfig.isWrapJar = false
     winConfig.icoFile = packageIconDir.resolve("icon.ico")
 }
 
@@ -60,7 +67,7 @@ tasks.register<PackageTask>("packageForMac") {
     mainClass = packageTaskMainClass
     jdkPath = packageTaskJdkDir.resolve("mac").resolve("Contents").resolve("Home")
     outputDirectory = packageTaskOutputDirectory.resolve("mac")
-    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    assetsDir = packageTaskAssetsDirectory.apply { mkdirs() }
     isBundleJre = true
     macConfig.isGenerateDmg = false
     macConfig.isGeneratePkg = true
@@ -73,7 +80,7 @@ tasks.register<PackageTask>("packageForLinux") {
     mainClass = packageTaskMainClass
     jdkPath = packageTaskJdkDir.resolve("linux")
     outputDirectory = packageTaskOutputDirectory.resolve("linux")
-    assetsDir = outputDirectory.resolve("assets").apply { mkdirs() }
+    assetsDir = packageTaskAssetsDirectory.apply { mkdirs() }
     isBundleJre = true
     linuxConfig.pngFile = packageIconDir.resolve("icon.png")
 }
