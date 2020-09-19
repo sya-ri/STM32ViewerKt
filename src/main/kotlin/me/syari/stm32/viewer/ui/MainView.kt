@@ -21,26 +21,20 @@ class MainView : View("STM32ViewerKt") {
     @FXML lateinit var menuItemRun: MenuItem
 
     init {
-        root.setOnDragOver { event ->
-            val board = event.dragboard
-            if (board.files.firstElfFileOrNull != null) {
-                event.acceptTransferModes(TransferMode.MOVE)
+        root.setOnDragOver {
+            if (it.dragboard.files.firstElfFileOrNull != null) {
+                it.acceptTransferModes(TransferMode.MOVE)
             }
         }
-        root.setOnDragDropped { event ->
-            event.dragboard.files.firstElfFileOrNull?.let {
-                ArmNoneEabiGdb.elfFile = it
-            }
+        root.setOnDragDropped {
+            ArmNoneEabiGdb.elfFile = it.dragboard.files.firstElfFileOrNull
         }
     }
 
     @Suppress("unused") // fxml
     fun clickMenuOpenElf() {
         val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
-        val file = chooseFile(null, filterOnlyElf).firstOrNull()
-        file?.let {
-            ArmNoneEabiGdb.elfFile = it
-        }
+        ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
     }
 
     @Suppress("unused") // fxml

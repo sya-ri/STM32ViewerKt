@@ -58,4 +58,9 @@ object ArmNoneEabiGdb {
     }
 
     var elfFile: File? = null
+        set(value) {
+            if (value != null) {
+                field = value
+            }
+        }
 }
