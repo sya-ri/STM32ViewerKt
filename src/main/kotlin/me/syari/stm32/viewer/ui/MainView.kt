@@ -3,14 +3,15 @@ package me.syari.stm32.viewer.ui
 import javafx.fxml.FXML
 import javafx.scene.Parent
 import javafx.scene.control.MenuItem
-import javafx.scene.input.TransferMode
 import javafx.stage.FileChooser
 import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
 import me.syari.stm32.viewer.debug.STLinkGDBServer
-import me.syari.stm32.viewer.util.firstElfFileOrNull
+import me.syari.stm32.viewer.util.enableDragDropFile
+import me.syari.stm32.viewer.util.isElfFile
 import tornadofx.View
 import tornadofx.chooseFile
 import tornadofx.error
+import java.io.File
 
 class MainView : View("STM32ViewerKt") {
     override val root: Parent by fxml("/fxml/MainView.fxml")
@@ -18,13 +19,8 @@ class MainView : View("STM32ViewerKt") {
     @FXML lateinit var menuItemRun: MenuItem
 
     init {
-        root.setOnDragOver {
-            if (it.dragboard.files.firstElfFileOrNull != null) {
-                it.acceptTransferModes(TransferMode.MOVE)
-            }
-        }
-        root.setOnDragDropped {
-            ArmNoneEabiGdb.elfFile = it.dragboard.files.firstElfFileOrNull
+        root.enableDragDropFile(File::isElfFile) {
+            ArmNoneEabiGdb.elfFile = it
         }
     }
 
