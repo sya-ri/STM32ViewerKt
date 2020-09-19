@@ -2,6 +2,12 @@ package me.syari.stm32.viewer.util
 
 import java.io.File
 
+val File.isElfFile
+    get() = extension == "elf"
+
+val List<File>.firstElfFileOrNull
+    get() = firstOrNull { it.isElfFile }
+
 val File.orParentDirectory: File
     get() = if (isDirectory) this else parentFile
 

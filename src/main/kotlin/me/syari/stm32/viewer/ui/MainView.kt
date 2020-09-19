@@ -5,17 +5,34 @@ import javafx.scene.Parent
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.MenuItem
+import javafx.scene.input.TransferMode
 import javafx.stage.FileChooser
 import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
 import me.syari.stm32.viewer.debug.STLinkGDBServer
+import me.syari.stm32.viewer.util.firstElfFileOrNull
 import tornadofx.View
 import tornadofx.alert
 import tornadofx.chooseFile
+
 
 class MainView : View("STM32ViewerKt") {
     override val root: Parent by fxml("/fxml/MainView.fxml")
 
     @FXML lateinit var menuItemRun: MenuItem
+
+    init {
+        root.setOnDragOver { event ->
+            val board = event.dragboard
+            if (board.files.firstElfFileOrNull != null) {
+                event.acceptTransferModes(TransferMode.MOVE)
+            }
+        }
+        root.setOnDragDropped { event ->
+            event.dragboard.files.firstElfFileOrNull?.let {
+                ArmNoneEabiGdb.elfFile = it
+            }
+        }
+    }
 
     @Suppress("unused") // fxml
     fun clickMenuOpenElf() {
