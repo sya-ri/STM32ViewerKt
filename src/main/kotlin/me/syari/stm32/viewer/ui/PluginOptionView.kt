@@ -21,9 +21,10 @@ class PluginOptionView : View("プラグイン オプション") {
         updateDisplayFromConfig()
     }
 
-    override val root = vbox {
+    override val root = vbox(20.0) {
         prefHeight = 250.0
         prefWidth = 600.0
+        paddingTop = 10.0
         paddingLeft = 20.0
 
         hbox {
@@ -46,9 +47,6 @@ class PluginOptionView : View("プラグイン オプション") {
                 }
                 action(buttonFindCubeIDEAction)
             }
-            vboxConstraints {
-                marginTopBottom(10.0)
-            }
         }
 
         hbox {
@@ -62,9 +60,6 @@ class PluginOptionView : View("プラグイン オプション") {
                 hboxConstraints {
                     marginLeftRight(5.0)
                 }
-            }
-            vboxConstraints {
-                marginTopBottom(10.0)
             }
         }
 
@@ -80,9 +75,6 @@ class PluginOptionView : View("プラグイン オプション") {
                     marginLeftRight(5.0)
                 }
             }
-            vboxConstraints {
-                marginTopBottom(10.0)
-            }
         }
 
         hbox {
@@ -96,9 +88,6 @@ class PluginOptionView : View("プラグイン オプション") {
                 hboxConstraints {
                     marginLeftRight(5.0)
                 }
-            }
-            vboxConstraints {
-                marginTopBottom(10.0)
             }
         }
 
@@ -120,9 +109,6 @@ class PluginOptionView : View("プラグイン オプション") {
                     marginRight = 150.0
                 }
                 action(buttonSaveAction)
-            }
-            vboxConstraints {
-                marginTopBottom(10.0)
             }
         }
     }
