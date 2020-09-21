@@ -43,7 +43,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 50.0
                 hboxConstraints {
-                    marginLeftRight(20.0)
+                    marginLeft = 20.0
                 }
                 action(buttonFindCubeIDEAction)
             }
@@ -58,7 +58,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 400.0
                 hboxConstraints {
-                    marginLeftRight(5.0)
+                    marginLeft = 5.0
                 }
             }
         }
@@ -72,7 +72,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 400.0
                 hboxConstraints {
-                    marginLeftRight(5.0)
+                    marginLeft = 5.0
                 }
             }
         }
@@ -86,7 +86,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 400.0
                 hboxConstraints {
-                    marginLeftRight(5.0)
+                    marginLeft = 5.0
                 }
             }
         }
@@ -97,17 +97,13 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefWidth = 100.0
                 hboxConstraints {
                     marginLeft = 130.0
-                    marginRight = 50.0
+                    marginRight = 100.0
                 }
                 action(buttonCancelAction)
             }
             button("保存") {
                 prefHeight = 30.0
                 prefWidth = 100.0
-                hboxConstraints {
-                    marginLeft = 50.0
-                    marginRight = 150.0
-                }
                 action(buttonSaveAction)
             }
         }
