@@ -1,4 +1,4 @@
-package me.syari.stm32.viewer.ui
+package me.syari.stm32.viewer.view
 
 import javafx.concurrent.Task
 import javafx.scene.control.Button

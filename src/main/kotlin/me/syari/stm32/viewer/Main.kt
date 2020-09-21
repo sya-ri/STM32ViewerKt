@@ -1,7 +1,7 @@
 package me.syari.stm32.viewer
 
 import me.syari.stm32.viewer.config.Config
-import me.syari.stm32.viewer.ui.MainView
+import me.syari.stm32.viewer.view.MainView
 import tornadofx.App
 import tornadofx.launch
 
