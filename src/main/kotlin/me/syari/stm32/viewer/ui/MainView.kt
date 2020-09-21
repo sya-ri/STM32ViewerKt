@@ -35,7 +35,8 @@ class MainView : View("STM32ViewerKt") {
 
     @Suppress("unused") // fxml
     fun clickMenuOpenPluginOption() {
-        openInternalWindow(PluginOptionView::class)
+        //openInternalWindow(PluginOptionView::class)
+        openInternalWindow(PluginOptionViewCode::class)
     }
 
     var isRunning = false
