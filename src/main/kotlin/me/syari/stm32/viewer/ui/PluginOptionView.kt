@@ -140,8 +140,8 @@ class PluginOptionView : View("プラグイン オプション") {
 
     private var findCubeIDETask: Task<Unit>? = null
 
-    private inline val buttonFindCubeIDEAction
-        get(): () -> Unit = {
+    private inline val buttonFindCubeIDEAction: () -> Unit
+        get() = {
             val initialDirectory = fileOrNull(textFieldCubeIDE.text)?.parentFile?.existsOrNull
             val file = chooseFile(null, emptyArray(), initialDirectory).firstOrNull()
             file?.let {
@@ -160,14 +160,14 @@ class PluginOptionView : View("プラグイン オプション") {
             }
         }
 
-    private inline val buttonCancelAction
+    private inline val buttonCancelAction: () -> Unit
         get() = {
             findCubeIDETask?.cancel()
             updateDisplayFromConfig()
             close()
         }
 
-    private inline val buttonSaveAction
+    private inline val buttonSaveAction: () -> Unit
         get() = {
             findCubeIDETask?.cancel()
             Config.saveFile {
