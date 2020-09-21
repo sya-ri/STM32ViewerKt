@@ -24,14 +24,12 @@ class PluginOptionView : View("プラグイン オプション") {
     override val root = vbox {
         prefHeight = 250.0
         prefWidth = 600.0
+        paddingLeft = 20.0
 
         hbox {
             label("CubeIDE") {
                 prefHeight = 30.0
                 prefWidth = 80.0
-                hboxConstraints {
-                    marginLeft = 20.0
-                }
             }
             textFieldCubeIDE = textfield {
                 prefHeight = 30.0
@@ -57,9 +55,6 @@ class PluginOptionView : View("プラグイン オプション") {
             label("ST-Link GDB Server") {
                 prefHeight = 30.0
                 prefWidth = 150.0
-                hboxConstraints {
-                    marginLeft = 20.0
-                }
             }
             textFieldStLinkGdbServer = textfield {
                 prefHeight = 30.0
@@ -77,9 +72,6 @@ class PluginOptionView : View("プラグイン オプション") {
             label("CubeProgrammer") {
                 prefHeight = 30.0
                 prefWidth = 150.0
-                hboxConstraints {
-                    marginLeft = 20.0
-                }
             }
             textFieldCubeProgrammer = textfield {
                 prefHeight = 30.0
@@ -97,9 +89,6 @@ class PluginOptionView : View("プラグイン オプション") {
             label("GNU Arm Embedded") {
                 prefHeight = 30.0
                 prefWidth = 150.0
-                hboxConstraints {
-                    marginLeft = 20.0
-                }
             }
             textFieldGnuArmEmbedded = textfield {
                 prefHeight = 30.0
@@ -118,7 +107,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 100.0
                 hboxConstraints {
-                    marginLeft = 150.0
+                    marginLeft = 130.0
                     marginRight = 50.0
                 }
                 action(buttonCancelAction)
