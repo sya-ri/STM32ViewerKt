@@ -1,8 +1,6 @@
 package me.syari.stm32.viewer.ui
 
 import javafx.concurrent.Task
-import javafx.fxml.FXML
-import javafx.scene.Parent
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import me.syari.stm32.viewer.config.Config
@@ -10,67 +8,181 @@ import me.syari.stm32.viewer.debug.Plugin
 import me.syari.stm32.viewer.util.existsOrNull
 import me.syari.stm32.viewer.util.fileOrNull
 import me.syari.stm32.viewer.util.finally
-import tornadofx.View
-import tornadofx.chooseFile
+import tornadofx.*
 
-class PluginOptionView : View("プラグインオプション") {
-    override val root: Parent by fxml("/fxml/PluginOptionView.fxml")
+class PluginOptionView : View("プラグイン オプション") {
+    private lateinit var buttonFindCubeIDE: Button
+    private lateinit var textFieldCubeIDE: TextField
+    private lateinit var textFieldStLinkGdbServer: TextField
+    private lateinit var textFieldCubeProgrammer: TextField
+    private lateinit var textFieldGnuArmEmbedded: TextField
 
-    @FXML private lateinit var buttonFindCubeIDE: Button
-    @FXML private lateinit var textViewCubeIDE: TextField
-    @FXML private lateinit var textViewStLinkGdbServer: TextField
-    @FXML private lateinit var textViewCubeProgrammer: TextField
-    @FXML private lateinit var textViewGnuArmEmbedded: TextField
-
-    init {
+    override fun onDock() {
         updateDisplayFromConfig()
     }
 
-    private var findCubeIDETask: Task<Unit>? = null
+    override val root = vbox {
+        prefHeight = 250.0
+        prefWidth = 600.0
 
-    @Suppress("unused") // fxml
-    fun clickFindCubeIDE() {
-        val initialDirectory = fileOrNull(textViewCubeIDE.text)?.parentFile?.existsOrNull
-        val file = chooseFile(null, emptyArray(), initialDirectory).firstOrNull()
-        file?.let {
-            textViewCubeIDE.text = it.path
-            findCubeIDETask = runAsync {
-                buttonFindCubeIDE.isDisable = true
-                val pluginsFolder = Plugin.findPluginsFolder(it)
-                val plugins = Plugin.findPlugins(pluginsFolder)
-                textViewStLinkGdbServer.text = plugins?.get(Plugin.Type.StLinkGdbServer) ?: ""
-                textViewCubeProgrammer.text = plugins?.get(Plugin.Type.CubeProgrammer) ?: ""
-                textViewGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""
-            } finally {
-                buttonFindCubeIDE.isDisable = false
-                findCubeIDETask = null
+        hbox {
+            label("CubeIDE") {
+                prefHeight = 30.0
+                prefWidth = 80.0
+                hboxConstraints {
+                    marginLeft = 20.0
+                }
+            }
+            textFieldCubeIDE = textfield {
+                prefHeight = 30.0
+                prefWidth = 400.0
+                hboxConstraints {
+                    marginLeftRight(5.0)
+                }
+            }
+            buttonFindCubeIDE = button("開く") {
+                prefHeight = 30.0
+                prefWidth = 50.0
+                hboxConstraints {
+                    marginLeftRight(20.0)
+                }
+                action(buttonFindCubeIDEAction)
+            }
+            vboxConstraints {
+                marginTopBottom(10.0)
+            }
+        }
+
+        hbox {
+            label("ST-Link GDB Server") {
+                prefHeight = 30.0
+                prefWidth = 150.0
+                hboxConstraints {
+                    marginLeft = 20.0
+                }
+            }
+            textFieldStLinkGdbServer = textfield {
+                prefHeight = 30.0
+                prefWidth = 400.0
+                hboxConstraints {
+                    marginLeftRight(5.0)
+                }
+            }
+            vboxConstraints {
+                marginTopBottom(10.0)
+            }
+        }
+
+        hbox {
+            label("CubeProgrammer") {
+                prefHeight = 30.0
+                prefWidth = 150.0
+                hboxConstraints {
+                    marginLeft = 20.0
+                }
+            }
+            textFieldCubeProgrammer = textfield {
+                prefHeight = 30.0
+                prefWidth = 400.0
+                hboxConstraints {
+                    marginLeftRight(5.0)
+                }
+            }
+            vboxConstraints {
+                marginTopBottom(10.0)
+            }
+        }
+
+        hbox {
+            label("GNU Arm Embedded") {
+                prefHeight = 30.0
+                prefWidth = 150.0
+                hboxConstraints {
+                    marginLeft = 20.0
+                }
+            }
+            textFieldGnuArmEmbedded = textfield {
+                prefHeight = 30.0
+                prefWidth = 400.0
+                hboxConstraints {
+                    marginLeftRight(5.0)
+                }
+            }
+            vboxConstraints {
+                marginTopBottom(10.0)
+            }
+        }
+
+        hbox {
+            button("キャンセル") {
+                prefHeight = 30.0
+                prefWidth = 100.0
+                hboxConstraints {
+                    marginLeft = 150.0
+                    marginRight = 50.0
+                }
+                action(buttonCancelAction)
+            }
+            button("保存") {
+                prefHeight = 30.0
+                prefWidth = 100.0
+                hboxConstraints {
+                    marginLeft = 50.0
+                    marginRight = 150.0
+                }
+                action(buttonSaveAction)
+            }
+            vboxConstraints {
+                marginTopBottom(10.0)
             }
         }
     }
 
-    @Suppress("unused") // fxml
-    fun clickClose() {
-        findCubeIDETask?.cancel()
-        updateDisplayFromConfig()
-        close()
-    }
+    private var findCubeIDETask: Task<Unit>? = null
 
-    @Suppress("unused") // fxml
-    fun clickSave() {
-        findCubeIDETask?.cancel()
-        Config.saveFile {
-            Config.Plugin.CubeIDE.put(textViewCubeIDE.text)
-            Config.Plugin.STLinkGDBServer.put(textViewStLinkGdbServer.text)
-            Config.Plugin.CubeProgrammer.put(textViewCubeProgrammer.text)
-            Config.Plugin.GnuArmEmbedded.put(textViewGnuArmEmbedded.text)
+    private inline val buttonFindCubeIDEAction
+        get(): () -> Unit = {
+            val initialDirectory = fileOrNull(textFieldCubeIDE.text)?.parentFile?.existsOrNull
+            val file = chooseFile(null, emptyArray(), initialDirectory).firstOrNull()
+            file?.let {
+                textFieldCubeIDE.text = it.path
+                findCubeIDETask = runAsync {
+                    buttonFindCubeIDE.isDisable = true
+                    val pluginsFolder = Plugin.findPluginsFolder(it)
+                    val plugins = Plugin.findPlugins(pluginsFolder)
+                    textFieldStLinkGdbServer.text = plugins?.get(Plugin.Type.StLinkGdbServer) ?: ""
+                    textFieldCubeProgrammer.text = plugins?.get(Plugin.Type.CubeProgrammer) ?: ""
+                    textFieldGnuArmEmbedded.text = plugins?.get(Plugin.Type.GnuArmEmbedded) ?: ""
+                } finally {
+                    buttonFindCubeIDE.isDisable = false
+                    findCubeIDETask = null
+                }
+            }
         }
-        close()
-    }
+
+    private inline val buttonCancelAction
+        get() = {
+            findCubeIDETask?.cancel()
+            updateDisplayFromConfig()
+            close()
+        }
+
+    private inline val buttonSaveAction
+        get() = {
+            findCubeIDETask?.cancel()
+            Config.saveFile {
+                Config.Plugin.CubeIDE.put(textFieldCubeIDE.text)
+                Config.Plugin.STLinkGDBServer.put(textFieldStLinkGdbServer.text)
+                Config.Plugin.CubeProgrammer.put(textFieldCubeProgrammer.text)
+                Config.Plugin.GnuArmEmbedded.put(textFieldGnuArmEmbedded.text)
+            }
+            close()
+        }
 
     private fun updateDisplayFromConfig() {
-        textViewCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""
-        textViewStLinkGdbServer.text = Config.Plugin.STLinkGDBServer.get() ?: ""
-        textViewCubeProgrammer.text = Config.Plugin.CubeProgrammer.get() ?: ""
-        textViewGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
+        textFieldCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""
+        textFieldStLinkGdbServer.text = Config.Plugin.STLinkGDBServer.get() ?: ""
+        textFieldCubeProgrammer.text = Config.Plugin.CubeProgrammer.get() ?: ""
+        textFieldGnuArmEmbedded.text = Config.Plugin.GnuArmEmbedded.get() ?: ""
     }
 }
