@@ -43,7 +43,7 @@ class PluginOptionView : View("プラグイン オプション") {
                 prefHeight = 30.0
                 prefWidth = 50.0
                 hboxConstraints {
-                    marginLeft = 20.0
+                    marginLeft = 15.0
                 }
                 action(buttonFindCubeIDEAction)
             }
