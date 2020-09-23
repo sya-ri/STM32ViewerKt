@@ -1,7 +1,5 @@
 package me.syari.stm32.viewer.view
 
-import javafx.fxml.FXML
-import javafx.scene.Parent
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.stage.FileChooser
@@ -9,48 +7,67 @@ import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
 import me.syari.stm32.viewer.debug.STLinkGDBServer
 import me.syari.stm32.viewer.util.enableDragDropFile
 import me.syari.stm32.viewer.util.isElfFile
-import tornadofx.View
-import tornadofx.chooseFile
-import tornadofx.error
+import tornadofx.*
 import java.io.File
 
 class MainView : View("STM32ViewerKt") {
-    override val root: Parent by fxml("/fxml/MainView.fxml")
+    lateinit var menuFileOpenRecent: Menu
+    lateinit var menuItemDebugRun: MenuItem
 
-    @FXML lateinit var menuOpenRecent: Menu
-    @FXML lateinit var menuItemRun: MenuItem
-
-    init {
-        ArmNoneEabiGdb.updateRecentElf(menuOpenRecent)
+    override fun onDock() {
+        ArmNoneEabiGdb.updateRecentElf(menuFileOpenRecent)
         root.enableDragDropFile(File::isElfFile) {
             ArmNoneEabiGdb.elfFile = it
         }
     }
 
-    @Suppress("unused") // fxml
-    fun clickMenuOpenElf() {
-        val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
-        ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
+    override val root = vbox {
+        prefHeight = 600.0
+        prefWidth = 900.0
+
+        menubar {
+            menu("File") {
+                item("Open .elf") {
+                    action(menuItemOpenElfAction)
+                }
+                menuFileOpenRecent = menu("Open Recent")
+                menu("Option") {
+                    item("Plugin") {
+                        action(menuItemOptionPluginAction)
+                    }
+                }
+            }
+            menu("Debug") {
+                menuItemDebugRun = item("Run") {
+                    debugRunAction()
+                }
+            }
+        }
     }
 
-    @Suppress("unused") // fxml
-    fun clickMenuOpenPluginOption() {
-        openInternalWindow(PluginOptionView::class)
-    }
+    private inline val menuItemOpenElfAction: () -> Unit
+        get() = {
+            val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
+            ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
+        }
+
+    private inline val menuItemOptionPluginAction: () -> Unit
+        get() = {
+            openInternalWindow(PluginOptionView::class)
+        }
 
     var isRunning = false
 
-    @Suppress("unused") // fxml
-    fun clickMenuRun() {
+    private fun MenuItem.debugRunAction() = action {
         println(ArmNoneEabiGdb.elfFile?.path)
-        menuItemRun.text = if (isRunning) {
+        menuItemDebugRun.text = if (isRunning) {
             ArmNoneEabiGdb.cancel()
             STLinkGDBServer.cancel()
             "Run"
         } else {
             val stLinkGdbServerResult = STLinkGDBServer.launch {
                 ArmNoneEabiGdb.cancel()
-                menuItemRun.text = "Run"
+                menuItemDebugRun.text = "Run"
             }
             when (stLinkGdbServerResult) {
                 is STLinkGDBServer.LaunchResult.Success -> {
@@ -60,28 +77,28 @@ class MainView : View("STM32ViewerKt") {
                         "ST-Link GDB Server を設定してください",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 STLinkGDBServer.LaunchResult.STLinkGDBServerNotExists -> {
                     error(
                         "ST-Link GDB Server が見つかりませんでした",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerPathIsNull -> {
                     error(
                         "CubeProgrammer を設定してください",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 STLinkGDBServer.LaunchResult.CubeProgrammerNotExists -> {
                     error(
                         "CubeProgrammer が見つかりませんでした",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
             }
             when (val armNoneEabiGdbLaunchResult = ArmNoneEabiGdb.launch()) {
@@ -94,35 +111,35 @@ class MainView : View("STM32ViewerKt") {
                         "GNU Arm Embedded を設定してください",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExists -> {
                     error(
                         "GNU Arm Embedded が見つかりませんでした",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExists -> {
                     error(
                         "arm-none-eabi-gdb が見つかりませんでした",
                         "File -> Option -> Plugin"
                     )
-                    return
+                    return@action
                 }
                 ArmNoneEabiGdb.LaunchResult.ElfFileIsNull -> {
                     error(
                         ".elf ファイルを選択していません",
                         "File -> Open .elf"
                     )
-                    return
+                    return@action
                 }
                 ArmNoneEabiGdb.LaunchResult.ElfFileNotExists -> {
                     error(
                         ".elf ファイルが見つかりませんでした",
                         "File -> Open .elf"
                     )
-                    return
+                    return@action
                 }
             }
             "Stop"
