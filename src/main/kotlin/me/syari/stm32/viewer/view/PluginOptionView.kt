@@ -99,12 +99,12 @@ class PluginOptionView : View("プラグイン オプション") {
                     marginLeft = 130.0
                     marginRight = 100.0
                 }
-                action(buttonCancelAction)
+                actionCancel()
             }
             button("保存") {
                 prefHeight = 30.0
                 prefWidth = 100.0
-                action(buttonSaveAction)
+                actionSave()
             }
         }
     }
@@ -131,24 +131,22 @@ class PluginOptionView : View("プラグイン オプション") {
             }
         }
 
-    private inline val buttonCancelAction: () -> Unit
-        get() = {
-            findCubeIDETask?.cancel()
-            updateDisplayFromConfig()
-            close()
-        }
+    private fun Button.actionCancel() = action {
+        findCubeIDETask?.cancel()
+        updateDisplayFromConfig()
+        close()
+    }
 
-    private inline val buttonSaveAction: () -> Unit
-        get() = {
-            findCubeIDETask?.cancel()
-            Config.saveFile {
-                Config.Plugin.CubeIDE.put(textFieldCubeIDE.text)
-                Config.Plugin.STLinkGDBServer.put(textFieldStLinkGdbServer.text)
-                Config.Plugin.CubeProgrammer.put(textFieldCubeProgrammer.text)
-                Config.Plugin.GnuArmEmbedded.put(textFieldGnuArmEmbedded.text)
-            }
-            close()
+    private fun Button.actionSave() = action {
+        findCubeIDETask?.cancel()
+        Config.saveFile {
+            Config.Plugin.CubeIDE.put(textFieldCubeIDE.text)
+            Config.Plugin.STLinkGDBServer.put(textFieldStLinkGdbServer.text)
+            Config.Plugin.CubeProgrammer.put(textFieldCubeProgrammer.text)
+            Config.Plugin.GnuArmEmbedded.put(textFieldGnuArmEmbedded.text)
         }
+        close()
+    }
 
     private fun updateDisplayFromConfig() {
         textFieldCubeIDE.text = Config.Plugin.CubeIDE.get() ?: ""

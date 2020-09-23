@@ -28,37 +28,35 @@ class MainView : View("STM32ViewerKt") {
         menubar {
             menu("File") {
                 item("Open .elf") {
-                    action(menuItemOpenElfAction)
+                    actionOpenElf()
                 }
                 menuFileOpenRecent = menu("Open Recent")
                 menu("Option") {
                     item("Plugin") {
-                        action(menuItemOptionPluginAction)
+                        actionOptionPlugin()
                     }
                 }
             }
             menu("Debug") {
                 menuItemDebugRun = item("Run") {
-                    debugRunAction()
+                    actionDebugRun()
                 }
             }
         }
     }
 
-    private inline val menuItemOpenElfAction: () -> Unit
-        get() = {
-            val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
-            ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
-        }
+    private fun MenuItem.actionOpenElf() = action {
+        val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
+        ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
+    }
 
-    private inline val menuItemOptionPluginAction: () -> Unit
-        get() = {
-            openInternalWindow(PluginOptionView::class)
-        }
+    private fun MenuItem.actionOptionPlugin() = action {
+        openInternalWindow(PluginOptionView::class)
+    }
 
     var isRunning = false
 
-    private fun MenuItem.debugRunAction() = action {
+    private fun MenuItem.actionDebugRun() = action {
         println(ArmNoneEabiGdb.elfFile?.path)
         menuItemDebugRun.text = if (isRunning) {
             ArmNoneEabiGdb.cancel()
