@@ -13,17 +13,17 @@ object STLinkGDBServer {
 
     fun launch(onExit: () -> Unit): LaunchResult {
         val stLinkGdbServerPath = Config.Plugin.STLinkGDBServer.get().nullOnEmpty
-            ?: return LaunchResult.STLinkGDBServerPathIsNull
+            ?: return LaunchResult.Failure.STLinkGDBServerPathIsNull
         val stLinkGdbServerFile = File(stLinkGdbServerPath).existsOrNull
-            ?: return LaunchResult.STLinkGDBServerNotExists
+            ?: return LaunchResult.Failure.STLinkGDBServerNotExists
         if (stLinkGdbServerFile.findStartsWith("ST-LINK_gdbserver").not())
-            return LaunchResult.STLinkGDBServerNotExists
+            return LaunchResult.Failure.STLinkGDBServerNotExists
         val cubeProgrammerPath = Config.Plugin.CubeProgrammer.get().nullOnEmpty
-            ?: return LaunchResult.CubeProgrammerPathIsNull
+            ?: return LaunchResult.Failure.CubeProgrammerPathIsNull
         val cubeProgrammerFile = File(cubeProgrammerPath).existsOrNull
-            ?: return LaunchResult.CubeProgrammerNotExists
+            ?: return LaunchResult.Failure.CubeProgrammerNotExists
         if (cubeProgrammerFile.findStartsWith("STM32_Programmer_CLI").not())
-            return LaunchResult.CubeProgrammerNotExists
+            return LaunchResult.Failure.CubeProgrammerNotExists
         return LaunchResult.Success {
             launchTask = runAsync {
                 launchProcess = ProcessBuilder().apply {
@@ -52,12 +52,14 @@ object STLinkGDBServer {
         }
     }
 
-    sealed class LaunchResult {
-        class Success(val start: () -> Unit) : LaunchResult()
-        object STLinkGDBServerPathIsNull : LaunchResult()
-        object STLinkGDBServerNotExists : LaunchResult()
-        object CubeProgrammerPathIsNull : LaunchResult()
-        object CubeProgrammerNotExists : LaunchResult()
+    sealed class LaunchResult(val run: () -> Unit) {
+        class Success(start: () -> Unit) : LaunchResult(start)
+        sealed class Failure(header: String, content: String) : LaunchResult({ error(header, content) }) {
+            object STLinkGDBServerPathIsNull : Failure("ST-Link GDB Server を設定してください", "File -> Option -> Plugin")
+            object STLinkGDBServerNotExists : Failure("ST-Link GDB Server が見つかりませんでした", "File -> Option -> Plugin")
+            object CubeProgrammerPathIsNull : Failure("CubeProgrammer を設定してください", "File -> Option -> Plugin")
+            object CubeProgrammerNotExists : Failure("CubeProgrammer が見つかりませんでした", "File -> Option -> Plugin")
+        }
     }
 
     fun cancel() {

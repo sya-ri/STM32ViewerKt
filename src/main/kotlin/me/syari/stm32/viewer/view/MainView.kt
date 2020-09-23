@@ -67,41 +67,12 @@ class MainView : View("STM32ViewerKt") {
                 ArmNoneEabiGdb.cancel()
                 menuItemDebugRun.text = "Run"
             }
-            when (stLinkGdbServerResult) {
-                is STLinkGDBServer.LaunchResult.Success -> {
-                }
-                STLinkGDBServer.LaunchResult.STLinkGDBServerPathIsNull -> {
-                    error(
-                        "ST-Link GDB Server を設定してください",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                STLinkGDBServer.LaunchResult.STLinkGDBServerNotExists -> {
-                    error(
-                        "ST-Link GDB Server が見つかりませんでした",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                STLinkGDBServer.LaunchResult.CubeProgrammerPathIsNull -> {
-                    error(
-                        "CubeProgrammer を設定してください",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                STLinkGDBServer.LaunchResult.CubeProgrammerNotExists -> {
-                    error(
-                        "CubeProgrammer が見つかりませんでした",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
+            if (stLinkGdbServerResult is STLinkGDBServer.LaunchResult.Failure) {
+                return@action stLinkGdbServerResult.run()
             }
             when (val armNoneEabiGdbLaunchResult = ArmNoneEabiGdb.launch()) {
                 is ArmNoneEabiGdb.LaunchResult.Success -> {
-                    stLinkGdbServerResult.start()
+                    stLinkGdbServerResult.run()
                     armNoneEabiGdbLaunchResult.start()
                 }
                 ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedPathIsNull -> {
