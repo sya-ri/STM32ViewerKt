@@ -70,47 +70,12 @@ class MainView : View("STM32ViewerKt") {
             if (stLinkGdbServerResult is STLinkGDBServer.LaunchResult.Failure) {
                 return@action stLinkGdbServerResult.run()
             }
-            when (val armNoneEabiGdbLaunchResult = ArmNoneEabiGdb.launch()) {
-                is ArmNoneEabiGdb.LaunchResult.Success -> {
-                    stLinkGdbServerResult.run()
-                    armNoneEabiGdbLaunchResult.start()
-                }
-                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedPathIsNull -> {
-                    error(
-                        "GNU Arm Embedded を設定してください",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                ArmNoneEabiGdb.LaunchResult.GnuArmEmbeddedNotExists -> {
-                    error(
-                        "GNU Arm Embedded が見つかりませんでした",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                ArmNoneEabiGdb.LaunchResult.ArmNoneEabiGdbNotExists -> {
-                    error(
-                        "arm-none-eabi-gdb が見つかりませんでした",
-                        "File -> Option -> Plugin"
-                    )
-                    return@action
-                }
-                ArmNoneEabiGdb.LaunchResult.ElfFileIsNull -> {
-                    error(
-                        ".elf ファイルを選択していません",
-                        "File -> Open .elf"
-                    )
-                    return@action
-                }
-                ArmNoneEabiGdb.LaunchResult.ElfFileNotExists -> {
-                    error(
-                        ".elf ファイルが見つかりませんでした",
-                        "File -> Open .elf"
-                    )
-                    return@action
-                }
+            val armNoneEabiGdbLaunchResult = ArmNoneEabiGdb.launch()
+            if (armNoneEabiGdbLaunchResult is ArmNoneEabiGdb.LaunchResult.Failure) {
+                return@action armNoneEabiGdbLaunchResult.run()
             }
+            stLinkGdbServerResult.run()
+            armNoneEabiGdbLaunchResult.run()
             "Stop"
         }
         isRunning = isRunning.not()

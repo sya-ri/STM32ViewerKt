@@ -7,6 +7,7 @@ import javafx.scene.control.SeparatorMenuItem
 import me.syari.stm32.viewer.config.Config
 import me.syari.stm32.viewer.util.*
 import tornadofx.action
+import tornadofx.error
 import tornadofx.runAsync
 import java.io.File
 
@@ -16,13 +17,13 @@ object ArmNoneEabiGdb {
 
     fun launch(): LaunchResult {
         val gnuArmEmbeddedPath = Config.Plugin.GnuArmEmbedded.get().nullOnEmpty
-            ?: return LaunchResult.GnuArmEmbeddedPathIsNull
+            ?: return LaunchResult.Failure.GnuArmEmbeddedPathIsNull
         val gnuArmEmbeddedFile = File(gnuArmEmbeddedPath).existsOrNull
-            ?: return LaunchResult.GnuArmEmbeddedNotExists
+            ?: return LaunchResult.Failure.GnuArmEmbeddedNotExists
         if (gnuArmEmbeddedFile.findStartsWith("arm-none-eabi-gdb").not())
-            return LaunchResult.ArmNoneEabiGdbNotExists
-        if (elfFile == null) return LaunchResult.ElfFileIsNull
-        if (elfFile?.exists() != false) return LaunchResult.ElfFileNotExists
+            return LaunchResult.Failure.ArmNoneEabiGdbNotExists
+        if (elfFile == null) return LaunchResult.Failure.ElfFileIsNull
+        if (elfFile?.exists() != false) return LaunchResult.Failure.ElfFileNotExists
         return LaunchResult.Success {
             launchTask = runAsync {
                 launchProcess = ProcessBuilder().apply {
@@ -47,13 +48,15 @@ object ArmNoneEabiGdb {
         }
     }
 
-    sealed class LaunchResult {
-        class Success(val start: () -> Unit) : LaunchResult()
-        object GnuArmEmbeddedPathIsNull : LaunchResult()
-        object GnuArmEmbeddedNotExists : LaunchResult()
-        object ArmNoneEabiGdbNotExists : LaunchResult()
-        object ElfFileIsNull : LaunchResult()
-        object ElfFileNotExists : LaunchResult()
+    sealed class LaunchResult(val run: () -> Unit) {
+        class Success(run: () -> Unit) : LaunchResult(run)
+        sealed class Failure(header: String, content: String) : LaunchResult({ error(header, content) }) {
+            object GnuArmEmbeddedPathIsNull : Failure("GNU Arm Embedded を設定してください", "File -> Option -> Plugin")
+            object GnuArmEmbeddedNotExists : Failure("GNU Arm Embedded が見つかりませんでした", "File -> Option -> Plugin")
+            object ArmNoneEabiGdbNotExists : Failure("arm-none-eabi-gdb が見つかりませんでした", "File -> Option -> Plugin")
+            object ElfFileIsNull : Failure(".elf ファイルを選択していません", "File -> Open .elf")
+            object ElfFileNotExists : Failure(".elf ファイルが見つかりませんでした", "File -> Open .elf")
+        }
     }
 
     fun cancel() {
