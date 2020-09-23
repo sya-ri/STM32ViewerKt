@@ -11,8 +11,8 @@ import tornadofx.*
 import java.io.File
 
 class MainView : View("STM32ViewerKt") {
-    lateinit var menuFileOpenRecent: Menu
-    lateinit var menuItemDebugRun: MenuItem
+    private lateinit var menuFileOpenRecent: Menu
+    private lateinit var menuItemDebugRun: MenuItem
 
     override fun onDock() {
         ArmNoneEabiGdb.updateRecentElf(menuFileOpenRecent)
@@ -54,7 +54,7 @@ class MainView : View("STM32ViewerKt") {
         openInternalWindow(PluginOptionView::class)
     }
 
-    var isRunning = false
+    private var isRunning = false
 
     private fun MenuItem.actionDebugRun() = action {
         menuItemDebugRun.text = if (isRunning) {
