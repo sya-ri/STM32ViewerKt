@@ -57,7 +57,6 @@ class MainView : View("STM32ViewerKt") {
     var isRunning = false
 
     private fun MenuItem.actionDebugRun() = action {
-        println(ArmNoneEabiGdb.elfFile?.path)
         menuItemDebugRun.text = if (isRunning) {
             ArmNoneEabiGdb.cancel()
             STLinkGDBServer.cancel()
