@@ -2,9 +2,12 @@ package me.syari.stm32.viewer.view
 
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY
 import javafx.stage.FileChooser
 import me.syari.stm32.viewer.debug.ArmNoneEabiGdb
+import me.syari.stm32.viewer.debug.DebugManager
 import me.syari.stm32.viewer.debug.STLinkGDBServer
+import me.syari.stm32.viewer.debug.Variable
 import me.syari.stm32.viewer.util.enableDragDropFile
 import me.syari.stm32.viewer.util.isElfFile
 import tornadofx.*
@@ -17,7 +20,7 @@ class MainView : View("STM32ViewerKt") {
     override fun onDock() {
         ArmNoneEabiGdb.updateRecentElf(menuFileOpenRecent)
         root.enableDragDropFile(File::isElfFile) {
-            ArmNoneEabiGdb.elfFile = it
+            DebugManager.elfFile = it
         }
     }
 
@@ -43,11 +46,19 @@ class MainView : View("STM32ViewerKt") {
                 }
             }
         }
+
+        tableview(DebugManager.variableTable) {
+            readonlyColumn("Name", Variable::name)
+            readonlyColumn("Type", Variable::typeName)
+            readonlyColumn("Value", Variable::value)
+
+            columnResizePolicy = CONSTRAINED_RESIZE_POLICY
+        }
     }
 
     private fun MenuItem.actionOpenElf() = action {
         val filterOnlyElf = arrayOf(FileChooser.ExtensionFilter("Executable File", "*.elf"))
-        ArmNoneEabiGdb.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
+        DebugManager.elfFile = chooseFile(null, filterOnlyElf).firstOrNull()
     }
 
     private fun MenuItem.actionOptionPlugin() = action {

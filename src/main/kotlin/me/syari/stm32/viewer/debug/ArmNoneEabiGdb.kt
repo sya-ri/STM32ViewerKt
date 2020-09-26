@@ -22,8 +22,8 @@ object ArmNoneEabiGdb {
             ?: return LaunchResult.Failure.GnuArmEmbeddedNotExists
         if (gnuArmEmbeddedFile.findStartsWith("arm-none-eabi-gdb").not())
             return LaunchResult.Failure.ArmNoneEabiGdbNotExists
-        if (elfFile == null) return LaunchResult.Failure.ElfFileIsNull
-        if (elfFile?.exists() != false) return LaunchResult.Failure.ElfFileNotExists
+        if (DebugManager.elfFile == null) return LaunchResult.Failure.ElfFileIsNull
+        if (DebugManager.elfFile?.exists() != false) return LaunchResult.Failure.ElfFileNotExists
         return LaunchResult.Success {
             launchTask = runAsync {
                 launchProcess = ProcessBuilder().apply {
@@ -66,20 +66,7 @@ object ArmNoneEabiGdb {
         }
     }
 
-    var elfFile: File? = null
-        set(value) {
-            if (value != null) {
-                field = value
-                recentElfFiles.remove(value.path)
-                recentElfFiles.add(value.path)
-                Config.saveFile {
-                    Config.Debug.RecentElf.put(recentElfFiles)
-                }
-                updateRecentElf()
-            }
-        }
-
-    private val recentElfFiles = Config.Debug.RecentElf.get()?.filter(String::isNotBlank).toMutableListOrEmpty()
+    val recentElfFiles = Config.Debug.RecentElf.get()?.filter(String::isNotBlank).toMutableListOrEmpty()
 
     private var recentElfFileMenu: Menu? = null
 
@@ -90,7 +77,7 @@ object ArmNoneEabiGdb {
             recentElfFiles.forEach {
                 menu.items.add(MenuItem(it).apply {
                     action {
-                        elfFile = File(it)
+                        DebugManager.elfFile = File(it)
                     }
                 })
             }
