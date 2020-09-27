@@ -29,7 +29,7 @@ dependencies {
 
 javafx {
     version = "15"
-    modules = listOf("javafx.controls", "javafx.fxml")
+    modules = listOf("javafx.controls")
 }
 
 tasks.withType<KotlinCompile> {
